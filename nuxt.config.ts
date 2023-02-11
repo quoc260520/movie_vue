@@ -1,18 +1,22 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    buildModules: [
-        '@nuxt/postcss8',
-        '@nuxtjs/vuetify',
-    ],
-    build: {
-        postcss: {
-            plugins: {
-            tailwindcss: {},
-            autoprefixer: {},
-            },
-        },
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
     },
-    css: [
-        '@/assets/css/main.css',
-    ],
-})
+  },
+  css: [
+    "@/assets/css/main.css",
+    "vuetify/lib/styles/main.sass",
+    "@mdi/font/css/materialdesignicons.min.css",
+  ],
+  build: {
+    transpile: ["vuetify"],
+  },
+  vite: {
+    define: {
+      "process.env.DEBUG": false,
+    },
+  },
+});
