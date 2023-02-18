@@ -14,7 +14,7 @@
           clearable
           label="Email"
           outlined
-          append-inner-icon="fa-regular fa-envelope"
+          append-inner-icon="mdi-email"
           v-model="form.email"
         >
         </v-text-field>
@@ -23,7 +23,7 @@
           :rules="[rules.required, rules.min]"
           :type="showPass ? 'text' : 'passWord'"
           :append-inner-icon="
-            showPass ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'
+            showPass ? 'mdi-eye-outline ' : 'mdi-eye-off-outline'
           "
           class="w-100 relative"
           label="Mật khẩu"
@@ -35,15 +35,12 @@
         <v-btn class="btn !bg-sky-400 text-white w-9/12 mb-4 mt-4" type="submit"
           >Đăng nhập</v-btn
         >
-        <v-label
-          class="!text-black underline"
-          @click="goToRegister()"
-          text="Đăng ký"
-        ></v-label>
-        <v-snackbar v-model="snackbar" :timeout="timeout" color="primary">
-          {{ message }}
-        </v-snackbar>
       </v-form>
+      <v-label
+        class="!text-black underline"
+        @click="goToRegister()"
+        text="Đăng ký"
+      ></v-label>
     </v-card>
   </div>
 </template>
@@ -78,7 +75,7 @@ export default {
     async function submitForm() {
       let response = await login(form.value);
       if (response?.data?.status === 200) {
-        router.push("/user");
+        location.replace("/user");
       } else {
         message.value = "Tài khoản hoặc mật khẩu không chính xác";
         snackbar.value = true;
@@ -92,7 +89,6 @@ export default {
     function goToRegister() {
       router.push("/register");
     }
-
     return {
       form,
       errors,

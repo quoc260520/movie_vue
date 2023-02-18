@@ -55,15 +55,12 @@
         <v-btn class="btn !bg-sky-400 text-white w-9/12 mb-4 mt-4" type="submit"
           >Đăng ký</v-btn
         >
-        <v-label
-          class="!text-black underline"
-          @click="goToLogin()"
-          text="Đăng nhập"
-        ></v-label>
       </v-form>
-      <v-snackbar v-model="snackbar" :timeout="timeout" color="primary">
-        {{ message }}
-      </v-snackbar>
+      <v-label
+        class="!text-black underline"
+        @click="goToLogin()"
+        text="Đăng nhập"
+      ></v-label>
     </v-card>
   </div>
 </template>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken, removeToken } from "../utils/auth";
 const instance = axios.create({
-  baseURL: "http://13.215.253.225:5000/", //base
+  baseURL: "http://localhost:8000/", //base
   // withCredentials: true,
   headers: {
     "Content-Type": "application/json",
