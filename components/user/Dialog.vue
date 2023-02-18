@@ -42,10 +42,7 @@
                 <v-select
                   v-model="form.role"
                   clearable
-                  :items="[
-                    'ADMIN',
-                    'USER',
-                  ]"
+                  :items="['ADMIN', 'USER']"
                   label="Quyền"
                 ></v-select>
               </v-col>
@@ -54,7 +51,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn variant="flat" color="error" @click="closeDialog"> Hủy </v-btn>
+          <v-btn color="error" variant="flat" @click="closeDialog"> Hủy </v-btn>
           <v-btn color="blue" variant="flat" @click="saveDialog"> Thêm </v-btn>
         </v-card-actions>
       </v-card>
@@ -79,7 +76,7 @@ export default {
 
     function saveDialog() {
       emit("save-dialog");
-      console.log(props.form)
+      console.log(props.form);
     }
     return {
       dialogVal,
@@ -90,5 +87,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
