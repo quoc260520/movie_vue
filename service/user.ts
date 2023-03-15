@@ -1,8 +1,9 @@
 import request from "./index";
 
-export async function getAllUser() {
+export async function getAllUser(params: any) {
   return request("/user", {
     method: "GET",
+    params: params,
   });
 }
 
@@ -21,8 +22,20 @@ export async function register(data: any) {
 }
 
 export async function getUser(params: any) {
-  return request("/user/getOne", {
+  return request("/user", {
     method: "GET",
     params: params,
+  });
+}
+
+export async function deleteUser(id: number) {
+  return request(`/user/delete-user/${id}`, {
+    method: "PUT",
+  });
+}
+
+export async function unDeleteUser(id: number) {
+  return request(`/user/un-delete-user/${id}`, {
+    method: "PUT",
   });
 }

@@ -35,7 +35,7 @@
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
                   label="Mật khẩu*"
-                  v-model="form.passWord"
+                  v-model="form.password"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
@@ -75,8 +75,7 @@ export default {
     const dialogVal = computed(() => props.dialog);
 
     function saveDialog() {
-      emit("save-dialog");
-      console.log(props.form);
+      emit("save-dialog", props.form);
     }
     return {
       dialogVal,
