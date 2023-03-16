@@ -1,7 +1,7 @@
 <template>
 <div>
     <v-data-table :headers="headers" :items="users" class="elevation-1 border-2" loading loading-text="Loading... Please wait">
-        <template v-slot:item.id="{ item }" slot-scope="props">
+        <template v-slot:item.id="{ item }">
             {{ item.columns.id }}
         </template>
         <template v-slot:item.role="{ item }">
@@ -13,7 +13,7 @@
             </v-chip>
         </template>
         <template v-slot:item.action="{ item }">
-            <v-chip color="orange" class="mr-[4px]" @click="rowClick(item.columns)">
+            <v-chip color="orange" class="mr-[4px]" @click="rowClick(item.columns)" :disabled="item.columns.deleteFlg">
                 <v-icon icon="mdi-human-edit"></v-icon>
                 <v-tooltip activator="parent" location="top">Cập nhật</v-tooltip>
             </v-chip>

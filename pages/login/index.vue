@@ -54,7 +54,11 @@ export default {
         async function submitForm() {
             let response = await login(form.value);
             if (response ?.data ?.status === 200) {
-                location.replace("/user");
+                if (response.data.data.role == "ADMIN") {
+                    location.replace("/user");
+                } else {
+                    location.replace("/");
+                }
             } else {
                 notification.notify({
                     title: "Tài khoản hoặc mật khẩu không chính xác",

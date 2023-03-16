@@ -39,3 +39,10 @@ export async function unDeleteUser(id: number) {
     method: "PUT",
   });
 }
+
+export async function updateUser(data:any) {
+  return request(`/user/update-user/${data.id}`, {
+    method: "PUT",
+    data: data
+  });
+}
