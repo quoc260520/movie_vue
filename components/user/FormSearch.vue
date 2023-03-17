@@ -62,28 +62,33 @@
 import { ref, reactive } from "vue";
 
 export default {
-  setup() {
-    let search = reactive({
+  setup(props, {emit}) {
+    const search = reactive({
       nameUser: "",
       email: "",
       phone: "",
       deleteFlag: "",
     });
-    let status = reactive([
+    const status = reactive([
       {
         title: "Tất cả",
+        value: 0,
         key: 0,
       },
       {
         title: "Hoạt đông",
+        value: 1,
         key: 1,
       },
       {
         title: "Bị khóa",
+        value: 2,
         key: 2,
       },
     ]);
-    function submitForm() {}
+    function submitForm() {
+      emit('search', search)
+    }
     return { search, status, submitForm };
   },
 };
