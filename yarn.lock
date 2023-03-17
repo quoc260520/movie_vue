@@ -509,6 +509,11 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.3.0.tgz#b5877182692a6f7a39d1108837bec24247ba4bd7"
   integrity sha512-qVtd5i1Cc7cdrqnTWqTObKQHjPWAiRwjUPaXObaeNPcy7+WKxJumGBx66rfSFgK6LNpIasVKkEgW8oyf0tmPLA==
 
+"@fortawesome/vue-fontawesome@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@fortawesome/vue-fontawesome/-/vue-fontawesome-3.0.3.tgz#633e2998d11f7d4ed41f0d5ea461a22ec9b9d034"
+  integrity sha512-KCPHi9QemVXGMrfuwf3nNnNo129resAIQWut9QTAMXmXqL2ErABC6ohd2yY5Ipq0CLWNbKHk8TMdTXL/Zf3ZhA==
+
 "@ioredis/commands@^1.1.1":
   version "1.2.0"
   resolved "https://registry.npmjs.org/@ioredis/commands/-/commands-1.2.0.tgz"
@@ -561,6 +566,11 @@
   dependencies:
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
+
+"@kyvg/vue3-notification@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@kyvg/vue3-notification/-/vue3-notification-2.9.0.tgz#8bcf23a9c54dfe609b1bbe2cb244bbfb9011f41e"
+  integrity sha512-5Vxl8h/+PFtBmzGgMxTjkH4gwEpvmTEka+dLqpek+8GJFm6LDfSji+rFx9vumgBF7db0KenGWeSrA+Qnclz9vg==
 
 "@mapbox/node-pre-gyp@^1.0.5":
   version "1.0.10"
