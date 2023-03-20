@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-app class="v-app">
-      <notifications />
       <LeftBar></LeftBar>
       <v-main>
         <FormSearch @search="searchUser"></FormSearch>

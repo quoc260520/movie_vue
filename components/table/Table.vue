@@ -12,13 +12,13 @@
           color="orange"
           class="mr-[4px]"
           @click="rowClick(item.columns)"
-          :disabled="item.columns.deleteFlg"
+          :disabled="item.raw.deleteFlg"
         >
-          <v-icon icon="mdi-human-edit"></v-icon>
+          <v-icon icon="mdi-square-edit-outline"></v-icon>
           <v-tooltip activator="parent" location="top">Cập nhật</v-tooltip>
         </v-chip>
         <v-chip
-          v-if="!item.columns.deleteFlg"
+          v-if="!item.raw.deleteFlg"
           color="red"
           @click="deleteItem(item.columns.id)"
         >

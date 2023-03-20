@@ -11,12 +11,12 @@
         <v-card-text>
           <v-container>
             <v-row class="justify-center">
-              <v-col cols="6" sm="6" md="6" v-for="item in filed">
+              <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                  :label="item.title"
-                  :rules="item.rule"
-                  :required="item.required"
-                  v-model="form[item.key]"
+                  label="Tên danh mục (*)"
+                  :rules="[rules.min, rules.required]"
+                  required
+                  v-model="form.name"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, reactive, computed } from "vue";
 export default {
   name: "Dialog",
   props: {
@@ -42,10 +42,12 @@ export default {
     title: [String],
     form: [Object, Array],
     isAddItem: [Boolean],
-    rules: [Object, Array],
-    filed: [Object, Array],
   },
   setup(props, { emit }) {
+    const rules = reactive({
+      required: (value) => !!value || "Không được bỏ trống.",
+      min: (v) => v.length >= 6 || "Tên danh mục ít nhất 6 ký tự",
+    });
     function closeDialog() {
       emit("dialog-close");
     }
@@ -58,6 +60,7 @@ export default {
     }
     return {
       dialogVal,
+      rules,
       closeDialog,
       saveDialog,
       updateItem

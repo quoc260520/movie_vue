@@ -1,5 +1,6 @@
 <template>
-  <v-navigation-drawer
+  <div>
+    <v-navigation-drawer
     v-model="drawer"
     :rail="rail"
     permanent
@@ -32,6 +33,8 @@
       ></v-list-item>
     </v-list>
   </v-navigation-drawer>
+  <notifications />
+  </div>
 </template>
 
 <script>
