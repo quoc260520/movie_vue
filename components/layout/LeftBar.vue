@@ -44,7 +44,7 @@ export default {
       { title: "My Account", icon: "mdi-account", to: "/" },
       { title: "Users", icon: "mdi-account-group-outline", to: "user" },
       { title: "Movies", icon: "mdi-movie-open-outline", to: "user" },
-      { title: "Categorys", icon: "mdi-list-box-outline", to: "user" },
+      { title: "Categorys", icon: "mdi-list-box-outline", to: "category" },
       { title: "Slides", icon: "mdi-play-box-outline", to: "user" },
       { title: "Time movies", icon: "mdi-clock-time-eight-outline", to: "user" },
     ]);
