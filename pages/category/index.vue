@@ -78,6 +78,7 @@ export default {
       {
         title: "Thao tác",
         key: "action",
+        sortable: false,
       },
     ]);
     const categorys = ref([]);
