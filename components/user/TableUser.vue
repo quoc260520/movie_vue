@@ -63,7 +63,6 @@ export default {
     totalPage: [Number]
   },
   setup(props, { emit }) {
-    console.log(props.totalPage);
     const page = ref(1);
     const itemsPerPage = ref(5);
     const headers = ref([
