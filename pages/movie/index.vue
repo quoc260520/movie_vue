@@ -77,7 +77,7 @@ export default {
       {
         title: "Thời lượng (phút)",
         key: "timeMovie",
-        width: "15%",
+        width: "10%",
       },
       {
         title: "Tác giả",
@@ -93,7 +93,7 @@ export default {
         title: "Mô tả",
         key: "description",
         sortable: false,
-        width: "35%",
+        width: "40%",
       },
       {
         title: "Thao tác",
