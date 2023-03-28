@@ -56,6 +56,7 @@ import {
   updateMovie as updateMovieApi,
   createMovie as createMovieApi,
 } from "~~/service/movie.ts";
+import { uploadMultiImage } from "~~/service/upload-file";
 import { getAllCategory } from "~~/service/category";
 export default {
   components: {
@@ -77,7 +78,7 @@ export default {
       {
         title: "Thời lượng (phút)",
         key: "timeMovie",
-        width: "10%",
+        width: "15%",
       },
       {
         title: "Tác giả",
@@ -93,7 +94,7 @@ export default {
         title: "Mô tả",
         key: "description",
         sortable: false,
-        width: "40%",
+        width: "35%",
       },
       {
         title: "Thao tác",
@@ -119,6 +120,7 @@ export default {
       nameMovie: "",
       timeMovie: "",
       thumbnail: "",
+      fileImages: "",
     });
     async function initData(data = null) {
       const res = await getAllMovie(data);
@@ -150,21 +152,35 @@ export default {
     function openDialog() {
       isAddMovie.value = true;
       title.value = "Thêm phim";
+      form.value = { };
       dialog.value = true;
     }
     function closeDialog() {
       dialog.value = false;
     }
     async function createMovie(data) {
+      const formData = new FormData();
+      for (let i = 0; i < data.fileImages.length; i++) {
+        console.log(data.fileImages[i]);
+        formData.append('file', data.fileImages[i]);
+      }
+      const thumps = await uploadMultiImage(formData);
+      data.thumbnail = thumps?.data?.data.map(thump => thump.url)
       const dataCreate = {
         nameMovie: data.nameMovie,
         description: data.description,
         author: data.author,
-        timeMovie: data.timeMovie,
+        timeMovie: parseInt(data.timeMovie),
         movieCategoryId: data.movieCategoryId,
         thumbnail: data.thumbnail,
       };
       const res = await createMovieApi(dataCreate);
+      if (res?.data?.status === 200) {
+        renderMessage("success", "Thêm thành công");
+        initData();
+      } else {
+        renderMessage("error", "Thêm không thành công");
+      }
       closeDialog();
       initData();
     }
@@ -175,20 +191,33 @@ export default {
         nameMovie: data.nameMovie,
         description: data.description,
         author: data.author,
-        timeMovie: data.timeMovie,
+        timeMovie: parseInt(data.timeMovie),
         movieCategoryId: data.movieCategoryId,
         thumbnail: data.thumbnail,
       };
       const res = await updateMovieApi(dataUpdate);
+      if (res?.data?.status === 200) {
+        renderMessage("success", "Cập nhật thành công");
+        initData();
+      } else {
+        renderMessage("error", "Cập nhật không thành công");
+      }
       closeDialog();
       initData();
     }
 
     async function confirmToggleCategory() {
+      let res;
       if (idDelete.value) {
-        const res = await deleteMovie(idMovie.value);
+        res = await deleteMovie(idMovie.value);
       } else {
-        const res = await unDeleteMovie(idMovie.value);
+        res = await unDeleteMovie(idMovie.value);
+      }
+      if (res?.data?.status === 200) {
+        renderMessage("success", "Thành công");
+        initData();
+      } else {
+        renderMessage("error", "Có lỗi xảy ra");
       }
       closeDialogConfirm();
       initData();
@@ -196,6 +225,12 @@ export default {
     async function getCategory() {
       const res = await getAllCategory();
       categorys.value = res?.data?.data;
+    }
+    function renderMessage(type, message) {
+      notification.notify({
+        title: message,
+        type: type,
+      });
     }
     onBeforeMount(() => {
       initData();
@@ -222,6 +257,7 @@ export default {
       closeDialog,
       createMovie,
       updateMovie,
+      renderMessage
     };
   },
 };

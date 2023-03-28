@@ -31,7 +31,7 @@
                   <v-text-field
                     type="number"
                     label="Thời gian (*)"
-                    :rules="[rules.maxTime]"
+                    :rules="[rules.maxTime, rules.minTime]"
                     v-model="form.timeMovie"
                   ></v-text-field>
                 </v-col>
@@ -47,13 +47,27 @@
                   ></v-select>
                 </v-col>
               </v-row>
+              <v-input type="hidden" v-model="form.thumbnail"></v-input>
               <v-row>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field
+                <v-col cols="6" sm="6" md="6">
+                  <v-file-input
+                    multiple
                     label="Hình ảnh"
-                    :rules="[]"
-                    v-model="form.thumbnail"
-                  ></v-text-field>
+                    @change="uploadFile"
+                    ref="fileImages"
+                    accept="image/png, image/jpeg, image/bmp"
+                    show-size
+                  ></v-file-input>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="2" sm="2" v-for="(url, index) in form.thumbnail" :key="index">
+                  <v-img
+                    :width="300"
+                    aspect-ratio="1/1"
+                    cover
+                    :src="url"
+                  ></v-img>
                 </v-col>
               </v-row>
               <v-row>
@@ -106,6 +120,7 @@ export default {
     categorys: [Array, Object],
   },
   setup(props, { emit }) {
+    const fileImages = ref(null);
     function closeDialog() {
       emit("close-dialog");
     }
@@ -115,7 +130,11 @@ export default {
       required: (value) => !!value || "Không được bỏ trống.",
       min: (v) => v.length >= 6 || "Ít nhất 6 ký tự",
       maxTime: (v) => v <= 1000 || "Số giờ quá lớn",
+      minTime: (v) => v > 0 || "Số giờ không hợp lệ"
     });
+    function uploadFile() {
+      props.form.fileImages = fileImages.value.files;
+    }
     function saveDialog() {
       emit("save-dialog", props.form);
     }
@@ -134,9 +153,11 @@ export default {
       rules,
       dialogVal,
       selectVal,
+      fileImages,
       closeDialog,
       saveDialog,
       updateUser,
+      uploadFile,
     };
   },
 };
