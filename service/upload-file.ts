@@ -9,3 +9,4 @@ export async function uploadMultiImage(data: any) {
     data: data,
   });
 }
+ 

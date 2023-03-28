@@ -161,7 +161,6 @@ export default {
     async function createMovie(data) {
       const formData = new FormData();
       for (let i = 0; i < data.fileImages.length; i++) {
-        console.log(data.fileImages[i]);
         formData.append('file', data.fileImages[i]);
       }
       const thumps = await uploadMultiImage(formData);
