@@ -7,6 +7,14 @@
       loading
       loading-text="Loading... Please wait"
     >
+      <template v-slot:item.image="{ item }">
+        <v-img
+          :width="200"
+          aspect-ratio="1/1"
+          cover
+          :src="item.raw.image"
+        ></v-img>
+      </template>
       <template v-slot:item.action="{ item }">
         <v-chip
           color="orange"
@@ -25,11 +33,7 @@
           <v-icon icon="mdi-delete-alert"></v-icon>
           <v-tooltip activator="parent" location="top">Xóa</v-tooltip>
         </v-chip>
-        <v-chip
-          v-else
-          color="success"
-          @click="restoreItem(item.raw.id)"
-        >
+        <v-chip v-else color="success" @click="restoreItem(item.raw.id)">
           <v-icon icon="mdi-delete-restore"></v-icon>
           <v-tooltip activator="parent" location="top">Khôi phục</v-tooltip>
         </v-chip>
@@ -47,7 +51,7 @@
 </template>
 
 <script>
-import { ref, reactive,computed } from "vue";
+import { ref, reactive, computed } from "vue";
 export default {
   props: {
     items: {
@@ -61,7 +65,6 @@ export default {
     totalPage: [Number],
   },
   setup(props, { emit }) {
-
     const page = ref(1);
     const itemsPerPage = ref(5);
     const headersVal = computed(() => props.headers);
