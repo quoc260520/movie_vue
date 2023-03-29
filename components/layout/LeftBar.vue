@@ -52,7 +52,7 @@ export default {
       {
         title: "Time movies",
         icon: "mdi-clock-time-eight-outline",
-        to: "user",
+        to: "time-movie",
       },
     ]);
     const drawer = ref(true);
