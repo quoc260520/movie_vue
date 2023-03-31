@@ -4,6 +4,14 @@
       <LeftBar></LeftBar>
       <v-main>
         <FullCalendar :options="calendarOptions" />
+        <DialogAddTime
+          :dialog="dialog"
+          :form="form"
+          :title="title"
+          :isAddItem="isAddItem"
+          :movies="movies"
+          @dialog-close="closeDialog"
+        ></DialogAddTime>
       </v-main>
       <Footer></Footer>
     </v-app>
@@ -11,7 +19,7 @@
 </template>
 
 <script>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -20,11 +28,14 @@ import listPlugin from "@fullcalendar/list";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import LeftBar from "~~/components/layout/LeftBar.vue";
 import Footer from "~~/components/layout/Footer.vue";
+import DialogAddTime from "~~/components/time-movie/DialogAddTime.vue";
+import { getAllMovie as getAllMovieApi } from "~~/service/movie.ts";
 export default {
   components: {
     FullCalendar,
     LeftBar,
     Footer,
+    DialogAddTime,
   },
   setup() {
     const calendarOptions = reactive({
@@ -51,10 +62,42 @@ export default {
         { title: "event 2", date: "2023-03-02" },
       ],
       dateClick: function (info) {
-        
+        clickDate();
       },
     });
-    return { calendarOptions };
+    const dialog = ref(false);
+    const title = ref("Thêm khung giờ chiếu phim");
+    const form = reactive({});
+    const isAddItem = ref(true);
+    const movies = ref([]);
+    function clickDate() {
+      openDialog();
+    }
+    function openDialog() {
+      dialog.value = true;
+    }
+    function closeDialog() {
+      dialog.value = false;
+    }
+    async function getAllMovie() {
+      // const res = await getAllMovieApi({deleteFlg: false});
+      const res = await getAllMovieApi();
+      movies.value = res?.data?.data;
+    }
+    onBeforeMount(() => {
+      getAllMovie();
+    });
+    return {
+      calendarOptions,
+      dialog,
+      title,
+      isAddItem,
+      form,
+      movies,
+      clickDate,
+      openDialog,
+      closeDialog,
+    };
   },
 };
 </script>
