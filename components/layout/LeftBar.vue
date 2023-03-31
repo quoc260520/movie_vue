@@ -48,6 +48,7 @@ export default {
       { title: "Users", icon: "mdi-account-group-outline", to: "user" },
       { title: "Movies", icon: "mdi-movie-open-outline", to: "movie" },
       { title: "Categorys", icon: "mdi-list-box-outline", to: "category" },
+      { title: "Rooms", icon: "mdi-door-open", to: "room" },
       { title: "Slides", icon: "mdi-play-box-outline", to: "slide" },
       {
         title: "Time movies",
