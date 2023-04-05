@@ -5,7 +5,7 @@
         <v-card>
           <v-card-title class="!flex justify-center mt-3">
             <span class="text-h5">{{ title }}</span>
-            <v-btn variant="text !absolute top-3 right-0" @click="closeDialog">
+            <v-btn variant="text" class="!absolute top-3 right-0" @click="closeDialog">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>

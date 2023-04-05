@@ -81,12 +81,12 @@
 <script>
 import { ref, reactive, computed } from "vue";
 export default {
-  name: "DialogSlide",
+  name: "DialogAddTime",
   props: {
-    dialog: [Boolean],
-    title: [String],
+    dialog: Boolean,
+    title: String,
     form: [Object, Array],
-    isAddItem: [Boolean],
+    isAddItem: Boolean,
     movies: [Object, Array],
   },
   setup(props, { emit }) {

@@ -15,6 +15,11 @@
           :src="item.raw.image"
         ></v-img>
       </template>
+      <template v-slot:item.deleteFlg="{ item }">
+        <v-chip :color="getColor(item.deleteFlg)">
+          {{ item.columns.deleteFlg ? "DEACTIVE" : "ACTIVE" }}
+        </v-chip>
+      </template>
       <template v-slot:item.action="{ item }">
         <v-chip
           color="orange"
@@ -84,6 +89,9 @@ export default {
     function updatePage() {
       emit("update-page", page.value);
     }
+    function getColor(flag) {
+      return flag ? "red" : "green";
+    }
 
     return {
       page,
@@ -93,6 +101,7 @@ export default {
       deleteItem,
       restoreItem,
       updatePage,
+      getColor
     };
   },
 };
