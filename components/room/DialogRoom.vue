@@ -69,7 +69,7 @@ export default {
     const dialogVal = computed(() => props.dialog);
     const rules = reactive({
       required: (value) => !!value || "Không được bỏ trống.",
-      min: (v) => v.length >= 6 || "Ít nhất 6 ký tự",
+      min: (v) => v.length >= 1 || "Ít nhất 1 ký tự",
     });
     function saveDialog() {
       emit("save-dialog", props.form);
