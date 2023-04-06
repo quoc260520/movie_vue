@@ -28,7 +28,7 @@ export async function deleteRoom(id: number) {
 }
 
 export async function unDeleteRoom(id: number) {
-  return request(`/room/un-delete/${id}`, {
+  return request(`/room/unDelete/${id}`, {
     method: "PUT",
   });
 }
