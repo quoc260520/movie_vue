@@ -11,7 +11,7 @@
         <v-chip
           color="orange"
           class="mr-[4px]"
-          @click="rowClick(item.columns)"
+          @click="rowClick(item.raw)"
           :disabled="item.raw.deleteFlg"
         >
           <v-icon icon="mdi-square-edit-outline"></v-icon>
@@ -20,7 +20,7 @@
         <v-chip
           v-if="!item.raw.deleteFlg"
           color="red"
-          @click="deleteItem(item.columns.id)"
+          @click="deleteItem(item.raw.id)"
         >
           <v-icon icon="mdi-delete-alert"></v-icon>
           <v-tooltip activator="parent" location="top">Xóa</v-tooltip>
@@ -28,7 +28,7 @@
         <v-chip
           v-else
           color="success"
-          @click="restoreItem(item.columns.id)"
+          @click="restoreItem(item.raw.id)"
         >
           <v-icon icon="mdi-delete-restore"></v-icon>
           <v-tooltip activator="parent" location="top">Khôi phục</v-tooltip>

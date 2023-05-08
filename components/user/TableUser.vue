@@ -67,11 +67,6 @@ export default {
     const itemsPerPage = ref(5);
     const headers = ref([
       {
-        align: "start",
-        key: "name",
-        sortable: true,
-      },
-      {
         title: "STT",
         key: "id",
         class: "text-red-700",
@@ -101,6 +96,7 @@ export default {
       {
         title: "Thao tác",
         key: "action",
+        sortable: false,
       },
     ]);
 

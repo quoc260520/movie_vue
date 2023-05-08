@@ -33,6 +33,8 @@
                 <v-select
                   v-model="search.deleteFlg"
                   :items="status"
+                  item-title="title"
+                  item-value="value"
                   label="Trạng thái"
                   variant="solo"
                 ></v-select>
@@ -67,23 +69,20 @@ export default {
       nameUser: "",
       email: "",
       phone: "",
-      deleteFlag: "",
+      deleteFlg: "",
     });
     const status = reactive([
       {
         title: "Tất cả",
-        value: 0,
-        key: 0,
+        value: '',
       },
       {
         title: "Hoạt đông",
-        value: 1,
-        key: 1,
+        value: false,
       },
       {
         title: "Bị khóa",
-        value: 2,
-        key: 2,
+        value: true,
       },
     ]);
     function submitForm() {
