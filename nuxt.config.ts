@@ -19,5 +19,5 @@ export default defineNuxtConfig({
       "process.env.DEBUG": false,
     },
   },
-  plugins: ['~/plugins/vue3-notification.ts',],
+  plugins: ['~/plugins/vue3-notification.ts','~/plugins/v-calendar.ts'],
 });
