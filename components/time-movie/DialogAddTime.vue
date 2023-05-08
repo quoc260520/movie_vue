@@ -30,7 +30,7 @@
                 </v-row>
                 <v-row class="justify-center">
                   <v-col cols="9" sm="9">
-                    <!-- <v-select
+                    <v-select
                       v-model="form.roomIds"
                       :items="rooms"
                       item-title="name"
@@ -40,8 +40,8 @@
                       chips
                       multiple
                       required
-                    ></v-select> -->
-                    <v-select
+                    ></v-select>
+                    <!-- <v-select
                       v-model="form.roomIds"
                       :items="rooms"
                       item-title="name"
@@ -50,7 +50,7 @@
                       label="Phòng (*)"
                       chips
                       required
-                    ></v-select>
+                    ></v-select> -->
                   </v-col>
                 </v-row>
                 <v-row class="justify-center">

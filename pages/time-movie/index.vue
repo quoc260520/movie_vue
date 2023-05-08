@@ -3,7 +3,27 @@
     <v-app class="v-app">
       <LeftBar></LeftBar>
       <v-main>
-        <FullCalendar :options="calendarOptions" />
+        <v-row cols="12" class="max-h-screen">
+          <v-col cols="9">
+            <FullCalendar :options="calendarOptions" />
+          </v-col>
+          <v-col cols="3" class="max-h-screen overflow-y-scroll scroll-auto">
+            <v-card class="mx-auto mr-2" variant="outlined">
+              <v-card-item v-for="n in 8">
+                <div>
+                  <div class="text-overline mb-1">OVERLINE</div>
+                  <div class="text-h6 mb-1">Headline</div>
+                  <div class="text-caption">
+                    Greyhound divisely hello coldly fonwderfully
+                  </div>
+                </div>
+              </v-card-item>
+              <v-card-actions>
+                <v-btn variant="outlined" color="warning"> Cập nhật </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
         <DialogAddTime
           :dialog="dialog"
           :form="form"
@@ -81,6 +101,9 @@ export default {
       dateClick: function (info) {
         clickDate(info);
       },
+      eventClick: function(info) {
+        console.log(info);
+      }
     });
     function clickDate(data) {
       form.startDate = new Date(data.date);
@@ -98,16 +121,15 @@ export default {
     async function addTime(data) {
       const res = await createTimeMovie({
         idMovie: parseInt(data.movieId),
-        idRoom: parseInt(data.roomIds),
+        idRoom: data.roomIds,
         price: parseInt(data.price),
-        timeStart: moment().toISOString(),
-        timeEnd: moment(),
+        timeStart: moment(data.startDate).toISOString(),
+        timeEnd: moment(data.endDate).toISOString(),
       });
       closeDialog();
     }
     async function getAllMovie() {
-      // const res = await getAllMovieApi({deleteFlg: false});
-      const res = await getAllMovieApi();
+      const res = await getAllMovieApi({ deleteFlg: false });
       movies.value = res?.data?.data;
     }
 
@@ -115,7 +137,6 @@ export default {
       const res = await getAllRoomApi({
         deleteFlg: false,
       });
-      // const res = await getAllRoomApi();
       rooms.value = res?.data?.data;
     }
 
@@ -124,6 +145,7 @@ export default {
       allTimeByMonth.value = res?.data?.data;
       timeLine.value = allTimeByMonth.value.map((time) => ({
         id: time.id,
+        title: time.roomShowtime.name,
         start: time.timeStart,
         end: time.timeEnd,
       }));
