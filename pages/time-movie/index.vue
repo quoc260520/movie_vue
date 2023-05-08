@@ -98,16 +98,15 @@ export default {
     async function addTime(data) {
       const res = await createTimeMovie({
         idMovie: parseInt(data.movieId),
-        idRoom: parseInt(data.roomIds),
+        idRoom: data.roomIds,
         price: parseInt(data.price),
-        timeStart: moment().toISOString(),
-        timeEnd: moment(),
+        timeStart: moment(data.startDate).toISOString(),
+        timeEnd: moment(data.endDate).toISOString(),
       });
       closeDialog();
     }
     async function getAllMovie() {
-      // const res = await getAllMovieApi({deleteFlg: false});
-      const res = await getAllMovieApi();
+      const res = await getAllMovieApi({deleteFlg: false});
       movies.value = res?.data?.data;
     }
 
@@ -115,7 +114,6 @@ export default {
       const res = await getAllRoomApi({
         deleteFlg: false,
       });
-      // const res = await getAllRoomApi();
       rooms.value = res?.data?.data;
     }
 

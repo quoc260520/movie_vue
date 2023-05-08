@@ -8,7 +8,7 @@ export async function getAllTime(params: any) {
 }
 
 export async function createTimeMovie(data: any) {
-  return request("/showtime-movie", {
+  return request("/showtime-movie/create-multi-room", {
     method: "POST",
     data: data,
   });
