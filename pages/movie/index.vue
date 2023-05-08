@@ -116,7 +116,7 @@ export default {
     const form = ref({
       author: "",
       description: "",
-      movieCategoryId: "",
+      categoryId: "",
       nameMovie: "",
       timeMovie: "",
       thumbnail: "",
@@ -152,36 +152,40 @@ export default {
     function openDialog() {
       isAddMovie.value = true;
       title.value = "Thêm phim";
-      form.value = { };
+      form.value = {};
       dialog.value = true;
     }
     function closeDialog() {
       dialog.value = false;
     }
     async function createMovie(data) {
-      const formData = new FormData();
-      for (let i = 0; i < data.fileImages.length; i++) {
-        formData.append('file', data.fileImages[i]);
-      }
-      const thumps = await uploadMultiImage(formData);
-      data.thumbnail = thumps?.data?.data.map(thump => thump.url)
-      const dataCreate = {
-        nameMovie: data.nameMovie,
-        description: data.description,
-        author: data.author,
-        timeMovie: parseInt(data.timeMovie),
-        movieCategoryId: data.movieCategoryId,
-        thumbnail: data.thumbnail,
-      };
-      const res = await createMovieApi(dataCreate);
-      if (res?.data?.status === 200) {
-        renderMessage("success", "Thêm thành công");
+      try {
+        const formData = new FormData();
+        for (let i = 0; i < data.fileImages.length; i++) {
+          formData.append("file", data.fileImages[i]);
+        }
+        const thumps = await uploadMultiImage(formData);
+        data.thumbnail = thumps?.data?.data.map((thump) => thump.url);
+        const dataCreate = {
+          nameMovie: data.nameMovie,
+          description: data.description,
+          author: data.author,
+          timeMovie: parseInt(data.timeMovie),
+          categoryId: data.categoryId,
+          thumbnail: data.thumbnail,
+        };
+        const res = await createMovieApi(dataCreate);
+        if (res?.data?.status === 200) {
+          renderMessage("success", "Thêm thành công");
+          initData();
+        } else {
+          renderMessage("error", "Thêm không thành công");
+        }
+        closeDialog();
         initData();
-      } else {
-        renderMessage("error", "Thêm không thành công");
+      } catch (e) {
+        renderMessage("error", "Đã có lỗi xảy ra");
       }
-      closeDialog();
-      initData();
     }
     async function updateMovie(dataItem) {
       const data = { ...form.value, ...dataItem };
@@ -191,7 +195,7 @@ export default {
         description: data.description,
         author: data.author,
         timeMovie: parseInt(data.timeMovie),
-        movieCategoryId: data.movieCategoryId,
+        categoryId: data.categoryId,
         thumbnail: data.thumbnail,
       };
       const res = await updateMovieApi(dataUpdate);
@@ -256,7 +260,7 @@ export default {
       closeDialog,
       createMovie,
       updateMovie,
-      renderMessage
+      renderMessage,
     };
   },
 };
