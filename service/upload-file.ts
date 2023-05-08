@@ -9,3 +9,13 @@ export async function uploadMultiImage(data: any) {
     data: data,
   });
 }
+ 
+export async function uploadFile(data: any) {
+  return request("/upload-file", {
+    headers: {
+        'Content-Type': 'multipart/form-data'
+    },
+    method: "POST",
+    data: data,
+  });
+}
