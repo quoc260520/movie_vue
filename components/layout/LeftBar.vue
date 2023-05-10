@@ -55,6 +55,11 @@ export default {
         icon: "mdi-clock-time-eight-outline",
         to: "time-movie",
       },
+      {
+        title: "Coupon",
+        icon: "mdi-ticket-percent-outline",
+        to: "coupon",
+      },
     ]);
     const drawer = ref(true);
     const rail = ref(true);

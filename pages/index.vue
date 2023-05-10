@@ -10,6 +10,6 @@ export default {
     return {};
   },
 };
-</script>
+</script>z
 
 <style lang="scss" scoped></style>
