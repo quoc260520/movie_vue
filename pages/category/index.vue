@@ -2,42 +2,43 @@
   <div>
     <v-app class="v-app">
       <LeftBar></LeftBar>
-      <v-main>
-        <v-row class="flex justify-end mt-2 mr-4">
-          <v-btn
-            color="success"
-            prepend-icon="mdi-plus-circle"
-            @click="openDialog"
-          >
-            Thêm
-          </v-btn>
-        </v-row>
-        <Table
-          :headers="headers"
-          :items="categorys"
-          @delete-item="deleteConfirm"
-          @restore-item="restoreConfirm"
-          @row-click="rowClick"
-        ></Table>
-        <DialogConfirm
-          :dialogConfirm="dialogConfirm"
-          :title="title"
-          @dialog-confirm-close="closeDialogConfirm"
-          @confirm="confirmToggleCategory"
-        ></DialogConfirm>
-        <DialogCategory
-          :is-add-item="isAddItem"
-          :title="title"
-          :dialog="dialog"
-          :form="form"
-          @dialog-close="dialogClose"
-          @update-item="updateCategory"
-          @save-dialog="addCategory"
-        ></DialogCategory>
-      </v-main>
-      <Footer></Footer> 
-    </v-app
-    >
+      <client-only>
+        <v-main>
+          <v-row class="flex justify-end mt-2 mr-4">
+            <v-btn
+              color="success"
+              prepend-icon="mdi-plus-circle"
+              @click="openDialog"
+            >
+              Thêm
+            </v-btn>
+          </v-row>
+          <Table
+            :headers="headers"
+            :items="categorys"
+            @delete-item="deleteConfirm"
+            @restore-item="restoreConfirm"
+            @row-click="rowClick"
+          ></Table>
+          <DialogConfirm
+            :dialogConfirm="dialogConfirm"
+            :title="title"
+            @dialog-confirm-close="closeDialogConfirm"
+            @confirm="confirmToggleCategory"
+          ></DialogConfirm>
+          <DialogCategory
+            :is-add-item="isAddItem"
+            :title="title"
+            :dialog="dialog"
+            :form="form"
+            @dialog-close="dialogClose"
+            @update-item="updateCategory"
+            @save-dialog="addCategory"
+          ></DialogCategory>
+        </v-main>
+      </client-only>
+      <Footer></Footer>
+    </v-app>
   </div>
 </template>
 

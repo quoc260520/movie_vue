@@ -2,39 +2,41 @@
   <div>
     <v-app class="v-app">
       <LeftBar></LeftBar>
-      <v-main>
-        <v-row cols="12" class="max-h-screen">
-          <v-col cols="9">
-            <FullCalendar :options="calendarOptions" />
-          </v-col>
-          <v-col cols="3" class="max-h-screen overflow-y-scroll scroll-auto">
-            <v-card class="mx-auto mr-2" variant="outlined">
-              <v-card-item v-for="n in 8">
-                <div>
-                  <div class="text-overline mb-1">OVERLINE</div>
-                  <div class="text-h6 mb-1">Headline</div>
-                  <div class="text-caption">
-                    Greyhound divisely hello coldly fonwderfully
+      <client-only>
+        <v-main>
+          <v-row cols="12" class="max-h-screen">
+            <v-col cols="9">
+              <FullCalendar :options="calendarOptions" />
+            </v-col>
+            <v-col cols="3" class="max-h-screen overflow-y-scroll scroll-auto">
+              <v-card class="mx-auto mr-2" variant="outlined">
+                <v-card-item v-for="n in 8">
+                  <div>
+                    <div class="text-overline mb-1">OVERLINE</div>
+                    <div class="text-h6 mb-1">Headline</div>
+                    <div class="text-caption">
+                      Greyhound divisely hello coldly fonwderfully
+                    </div>
                   </div>
-                </div>
-              </v-card-item>
-              <v-card-actions>
-                <v-btn variant="outlined" color="warning"> Cập nhật </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-        <DialogAddTime
-          :dialog="dialog"
-          :form="form"
-          :title="title"
-          :isAddItem="isAddItem"
-          :movies="movies"
-          :rooms="rooms"
-          @dialog-close="closeDialog"
-          @save-dialog="addTime"
-        ></DialogAddTime>
-      </v-main>
+                </v-card-item>
+                <v-card-actions>
+                  <v-btn variant="outlined" color="warning"> Cập nhật </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
+          <DialogAddTime
+            :dialog="dialog"
+            :form="form"
+            :title="title"
+            :isAddItem="isAddItem"
+            :movies="movies"
+            :rooms="rooms"
+            @dialog-close="closeDialog"
+            @save-dialog="addTime"
+          ></DialogAddTime>
+        </v-main>
+      </client-only>
       <Footer></Footer>
     </v-app>
   </div>
@@ -101,9 +103,9 @@ export default {
       dateClick: function (info) {
         clickDate(info);
       },
-      eventClick: function(info) {
+      eventClick: function (info) {
         console.log(info);
-      }
+      },
     });
     function clickDate(data) {
       form.startDate = new Date(data.date);

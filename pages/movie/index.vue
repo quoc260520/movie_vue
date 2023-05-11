@@ -2,40 +2,42 @@
   <div>
     <v-app class="v-app">
       <LeftBar></LeftBar>
-      <v-main>
-        <v-row class="flex justify-end mt-2 mr-4">
-          <v-btn
-            color="success"
-            prepend-icon="mdi-movie-open-plus"
-            @click="openDialog"
-          >
-            Thêm phim
-          </v-btn>
-        </v-row>
-        <Table
-          :headers="headers"
-          :items="movies"
-          @delete-item="deleteConfirm"
-          @restore-item="restoreConfirm"
-          @row-click="rowClick"
-        ></Table>
-        <DialogConfirm
-          :dialogConfirm="dialogConfirm"
-          :title="title"
-          @dialog-confirm-close="closeDialogConfirm"
-          @confirm="confirmToggleCategory"
-        ></DialogConfirm>
-        <DialogMovie
-          :dialog="dialog"
-          :title="title"
-          :form="form"
-          :isAddMovie="isAddMovie"
-          :categorys="categorys"
-          @close-dialog="closeDialog"
-          @save-dialog="createMovie"
-          @update-dialog="updateMovie"
-        ></DialogMovie>
-      </v-main>
+      <client-only>
+        <v-main>
+          <v-row class="flex justify-end mt-2 mr-4">
+            <v-btn
+              color="success"
+              prepend-icon="mdi-movie-open-plus"
+              @click="openDialog"
+            >
+              Thêm phim
+            </v-btn>
+          </v-row>
+          <Table
+            :headers="headers"
+            :items="movies"
+            @delete-item="deleteConfirm"
+            @restore-item="restoreConfirm"
+            @row-click="rowClick"
+          ></Table>
+          <DialogConfirm
+            :dialogConfirm="dialogConfirm"
+            :title="title"
+            @dialog-confirm-close="closeDialogConfirm"
+            @confirm="confirmToggleCategory"
+          ></DialogConfirm>
+          <DialogMovie
+            :dialog="dialog"
+            :title="title"
+            :form="form"
+            :isAddMovie="isAddMovie"
+            :categorys="categorys"
+            @close-dialog="closeDialog"
+            @save-dialog="createMovie"
+            @update-dialog="updateMovie"
+          ></DialogMovie>
+        </v-main>
+      </client-only>
       <Footer></Footer>
     </v-app>
   </div>
