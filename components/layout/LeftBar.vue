@@ -33,7 +33,7 @@
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <notifications />
+    <notifications position="center" />
   </div>
 </template>
 

@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="dialogVal" persistent width="1024">
       <v-card>
-        <v-form fast-fail @submit.prevent>
+        <v-form @submit.prevent="submitForm()" :validation-schema="form">
           <v-card-title class="!flex justify-center mt-3">
             <span class="text-h5">{{ title }}</span>
             <v-btn
@@ -19,7 +19,6 @@
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     label="Tên mã (*)"
-                    :rules="[rules.min, rules.required]"
                     required
                     v-model="form.name"
                   ></v-text-field>
@@ -27,7 +26,6 @@
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     label="Code (*)"
-                    :rules="[rules.min, rules.required]"
                     required
                     v-model="form.code"
                   ></v-text-field>
@@ -37,7 +35,6 @@
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     label="Thời gian bắt đầu (*)"
-                    :rules="[rules.min, rules.required]"
                     required
                     v-model="form.timeStart"
                   ></v-text-field>
@@ -45,7 +42,6 @@
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     label="Thời gian kết thúc (*)"
-                    :rules="[rules.min, rules.required]"
                     required
                     v-model="form.timeEnd"
                   ></v-text-field>
@@ -55,7 +51,6 @@
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     label="Giảm (*)"
-                    :rules="[rules.min, rules.required]"
                     required
                     v-model="form.discount"
                   ></v-text-field>
@@ -94,7 +89,13 @@
 </template>
 
 <script>
-import { ref, reactive, computed } from "vue";
+import { computed } from "vue";
+import { useForm, useField } from "vee-validate";
+import { defineRule } from "vee-validate";
+import { required, email, min } from "@vee-validate/rules";
+defineRule("required", required);
+defineRule("email", email);
+defineRule("min", min);
 export default {
   name: "Dialog",
   props: {
@@ -104,9 +105,14 @@ export default {
     isAddItem: [Boolean],
   },
   setup(props, { emit }) {
-    const rules = reactive({
-      required: (value) => value || "Không được bỏ trống.",
-      min: (v) => v.length >= 6 || "Tên danh mục ít nhất 6 ký tự",
+    const { value: password } = useField("password", "required|min:6");
+    const { value: email } = useField("email", "required|email");
+
+    const { handleSubmit, errors } = useForm();
+
+    const submitForm = handleSubmit((values) => {
+      alert(JSON.stringify(values));
+      // submitLogin(values);
     });
     function closeDialog() {
       emit("dialog-close");
@@ -116,11 +122,14 @@ export default {
       emit("save-dialog", props.form);
     }
     function updateItem() {
+      alert(JSON.stringify(props.form));
+
       emit("update-item", props.form);
     }
     return {
       dialogVal,
-      rules,
+      errors,
+      submitForm,
       closeDialog,
       saveDialog,
       updateItem,

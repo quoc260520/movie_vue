@@ -9,20 +9,19 @@
         class="px-5 flex flex-column justify-center items-center"
       >
         <v-text-field
-          :rules="[rules.required, rules.emailRules]"
           class="input-field w-100 mb-4"
           clearable
           label="Email"
+          type="email"
           outlined
           append-inner-icon="mdi-email"
-          autocomplete
-          v-model="form.email"
+          v-model="email"
+          :error-messages="errors.email"
         >
         </v-text-field>
         <v-text-field
           @click:appendInner="showPass = !showPass"
-          :rules="[rules.required, rules.min]"
-          :type="showPass ? 'text' : 'p'"
+          :type="showPass ? 'text' : 'password'"
           :append-inner-icon="
             showPass ? 'mdi-eye-outline ' : 'mdi-eye-off-outline'
           "
@@ -30,7 +29,8 @@
           label="Mật khẩu"
           clearable
           outlined
-          v-model="form.password"
+          v-model="password"
+          :error-messages="errors.password"
         >
         </v-text-field>
         <v-btn class="btn !bg-sky-400 text-white w-9/12 mb-4 mt-4" type="submit"
@@ -48,9 +48,15 @@
 </template>
 
 <script>
-import { ref, reactive } from "vue";
-import { getAllUser, getUser, login } from "~~/service/user";
+import { ref } from "vue";
+import { login } from "~~/service/user";
 import { useNotification } from "@kyvg/vue3-notification";
+import { useForm, useField } from "vee-validate";
+import { defineRule } from "vee-validate";
+import { required, email, min } from "@vee-validate/rules";
+defineRule("required", required);
+defineRule("email", email);
+defineRule("min", min);
 export default {
   setup() {
     definePageMeta({
@@ -58,25 +64,20 @@ export default {
     });
     const router = useRouter();
     const notification = useNotification();
-    const form = ref({
-      email: "",
-      password: "",
-    });
-
-    const rules = reactive({
-      required: (value) => !!value || "Không được bỏ trống.",
-      min: (v) => v.length >= 6 || "Mật khẩu ít nhất 6 ký tự",
-      emailRules: (email) =>
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email) ||
-        "Không đúng định dạng email",
-    });
 
     const showPass = ref(false);
 
-    const errors = ref(null);
+    const { handleSubmit, errors } = useForm();
 
-    async function submitForm() {
-      let response = await login(form.value);
+    const { value: password } = useField("password", "required|min:6");
+    const { value: email } = useField("email", "required|email");
+
+    const submitForm = handleSubmit((values) => {
+      submitLogin(values);
+    });
+
+    async function submitLogin(values) {
+      let response = await login(values);
       if (response?.data?.status === 200) {
         localStorage.setItem("user", JSON.stringify(response.data.data));
         if (response.data.data.role == "ADMIN") {
@@ -84,7 +85,6 @@ export default {
         } else {
           location.replace("/");
         }
-        s;
       } else {
         notification.notify({
           title: "Tài khoản hoặc mật khẩu không chính xác",
@@ -93,20 +93,15 @@ export default {
       }
     }
 
-    async function getUsers() {
-      const data = await getAllUser();
-    }
-
     function goToRegister() {
       router.push("/register");
     }
     return {
-      form,
+      email,
+      password,
       errors,
-      rules,
       showPass,
       submitForm,
-      getUsers,
       goToRegister,
     };
   },

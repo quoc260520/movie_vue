@@ -10,38 +10,37 @@
         class="px-5 flex flex-column justify-center items-center"
       >
         <v-text-field
-          :rules="[rules.required]"
           class="input-field w-100 mb-4"
           clearable
           label="Họ tên"
           outlined
           append-inner-icon="mdi-account"
-          v-model="form.nameUser"
+          :error-messages="errors.nameUser"
+          v-model="nameUser"
         >
         </v-text-field>
         <v-text-field
-          :rules="[rules.required]"
           class="input-field w-100 mb-4"
           clearable
           label="Số điện thoại"
           outlined
           append-inner-icon="mdi-phone"
-          v-model="form.phone"
+          v-model="phone"
+          :error-messages="errors.phone"
         >
         </v-text-field>
         <v-text-field
-          :rules="[rules.required, rules.emailRules]"
           class="input-field w-100 mb-4"
           clearable
           label="Email"
           outlined
           append-inner-icon="mdi-email"
-          v-model="form.email"
+          v-model="email"
+          :error-messages="errors.email"
         >
         </v-text-field>
         <v-text-field
           @click:appendInner="showPass = !showPass"
-          :rules="[rules.required, rules.min]"
           :type="showPass ? 'text' : 'password'"
           :append-inner-icon="
             showPass ? 'mdi-eye-outline' : 'mdi-eye-off-outline'
@@ -49,7 +48,8 @@
           class="w-100 relative"
           label="Mật khẩu"
           outlined
-          v-model="form.password"
+          v-model="password"
+          :error-messages="errors.password"
         >
         </v-text-field>
         <v-btn class="btn !bg-sky-400 text-white w-9/12 mb-4 mt-4" type="submit"
@@ -66,9 +66,17 @@
 </template>
 
 <script>
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { register } from "~~/service/user";
 import { useNotification } from "@kyvg/vue3-notification";
+import { useForm, useField } from "vee-validate";
+import { defineRule } from "vee-validate";
+import { required, email, min, digits, between } from "@vee-validate/rules";
+defineRule("required", required);
+defineRule("email", email);
+defineRule("min", min);
+defineRule("digits", digits);
+defineRule("between", between);
 export default {
   setup() {
     definePageMeta({
@@ -76,25 +84,22 @@ export default {
     });
     const notification = useNotification();
     const router = useRouter();
-    const form = ref({
-      email: "",
-      password: "",
-      phone: "",
-      nameUser: "",
-    });
 
-    const rules = reactive({
-      required: (value) => !!value || "Không được bỏ trống.",
-      min: (v) => v.length >= 6 || "Mật khẩu ít nhất 6 ký tự",
-      emailRules: (email) =>
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email) ||
-        "Không đúng định dạng email",
+    const { handleSubmit, errors } = useForm();
+
+    const { value: email } = useField("email", "required|email");
+    const { value: nameUser } = useField("nameUser", "required");
+    const { value: password } = useField("password", "required|min:6");
+    const { value: phone } = useField("phone", "required|digits:10");
+
+    const submitForm = handleSubmit((values) => {
+      submitRegister(values);
     });
 
     const showPass = ref(false);
 
-    async function submitForm() {
-      let response = await register(form.value);
+    async function submitRegister(values) {
+      let response = await register(values);
       if (response?.data?.status === 200) {
         goToLogin();
       } else {
@@ -110,9 +115,12 @@ export default {
     }
 
     return {
-      form,
-      rules,
       showPass,
+      errors,
+      email,
+      nameUser,
+      phone,
+      password,
       submitForm,
       goToLogin,
     };
