@@ -53,6 +53,9 @@ import { getAllUser, getUser, login } from "~~/service/user";
 import { useNotification } from "@kyvg/vue3-notification";
 export default {
   setup() {
+    definePageMeta({
+      layout: false,
+    });
     const router = useRouter();
     const notification = useNotification();
     const form = ref({

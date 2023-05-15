@@ -1,52 +1,44 @@
 <template>
   <div>
-    <v-app class="v-app">
-      <LeftBar></LeftBar>
-      <client-only>
-        <v-main>
-          <v-row class="flex justify-end mt-2 mr-4">
-            <v-btn
-              color="success"
-              prepend-icon="mdi-movie-open-plus"
-              @click="openDialog"
-            >
-              Thêm phim
-            </v-btn>
-          </v-row>
-          <Table
-            :headers="headers"
-            :items="movies"
-            @delete-item="deleteConfirm"
-            @restore-item="restoreConfirm"
-            @row-click="rowClick"
-          ></Table>
-          <DialogConfirm
-            :dialogConfirm="dialogConfirm"
-            :title="title"
-            @dialog-confirm-close="closeDialogConfirm"
-            @confirm="confirmToggleCategory"
-          ></DialogConfirm>
-          <DialogMovie
-            :dialog="dialog"
-            :title="title"
-            :form="form"
-            :isAddMovie="isAddMovie"
-            :categorys="categorys"
-            @close-dialog="closeDialog"
-            @save-dialog="createMovie"
-            @update-dialog="updateMovie"
-          ></DialogMovie>
-        </v-main>
-      </client-only>
-      <Footer></Footer>
-    </v-app>
+    <client-only>
+      <v-row class="flex justify-end mt-2 mr-4">
+        <v-btn
+          color="success"
+          prepend-icon="mdi-movie-open-plus"
+          @click="openDialog"
+        >
+          Thêm phim
+        </v-btn>
+      </v-row>
+      <Table
+        :headers="headers"
+        :items="movies"
+        @delete-item="deleteConfirm"
+        @restore-item="restoreConfirm"
+        @row-click="rowClick"
+      ></Table>
+      <DialogConfirm
+        :dialogConfirm="dialogConfirm"
+        :title="title"
+        @dialog-confirm-close="closeDialogConfirm"
+        @confirm="confirmToggleCategory"
+      ></DialogConfirm>
+      <DialogMovie
+        :dialog="dialog"
+        :title="title"
+        :form="form"
+        :isAddMovie="isAddMovie"
+        :categorys="categorys"
+        @close-dialog="closeDialog"
+        @save-dialog="createMovie"
+        @update-dialog="updateMovie"
+      ></DialogMovie>
+    </client-only>
   </div>
 </template>
 
 <script>
 import { ref, reactive } from "vue";
-import LeftBar from "~~/components/layout/LeftBar.vue";
-import Footer from "~~/components/layout/Footer.vue";
 import Table from "~~/components/table/Table.vue";
 import DialogConfirm from "~~/components/dialog/DialogConfirm.vue";
 import DialogMovie from "~~/components/movie/DialogMovie.vue";
@@ -62,8 +54,6 @@ import { uploadMultiImage } from "~~/service/upload-file";
 import { getAllCategory } from "~~/service/category";
 export default {
   components: {
-    LeftBar,
-    Footer,
     Table,
     DialogConfirm,
     DialogMovie,

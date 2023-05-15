@@ -1,50 +1,42 @@
 <template>
   <div>
-    <v-app class="v-app">
-      <LeftBar></LeftBar>
-      <client-only>
-        <v-main>
-          <v-row class="flex justify-end mt-2 mr-4">
-            <v-btn
-              color="success"
-              prepend-icon="mdi-plus-circle"
-              @click="openDialog"
-            >
-              Thêm
-            </v-btn>
-          </v-row>
-          <Table
-            :headers="headers"
-            :items="slides"
-            @delete-item="deleteConfirm"
-            @row-click="rowClick"
-          ></Table>
-          <DialogConfirm
-            :dialogConfirm="dialogConfirm"
-            :title="title"
-            @dialog-confirm-close="closeDialogConfirm"
-            @confirm="confirmDeleteSlide"
-          ></DialogConfirm>
-          <DialogSlide
-            :is-add-item="isAddItem"
-            :title="title"
-            :dialog="dialog"
-            :form="form"
-            @dialog-close="dialogClose"
-            @update-item="updateSlide"
-            @save-dialog="addSldie"
-          ></DialogSlide>
-        </v-main>
-      </client-only>
-      <Footer></Footer>
-    </v-app>
+    <client-only>
+      <v-row class="flex justify-end mt-2 mr-4">
+        <v-btn
+          color="success"
+          prepend-icon="mdi-plus-circle"
+          @click="openDialog"
+        >
+          Thêm
+        </v-btn>
+      </v-row>
+      <Table
+        :headers="headers"
+        :items="slides"
+        @delete-item="deleteConfirm"
+        @row-click="rowClick"
+      ></Table>
+      <DialogConfirm
+        :dialogConfirm="dialogConfirm"
+        :title="title"
+        @dialog-confirm-close="closeDialogConfirm"
+        @confirm="confirmDeleteSlide"
+      ></DialogConfirm>
+      <DialogSlide
+        :is-add-item="isAddItem"
+        :title="title"
+        :dialog="dialog"
+        :form="form"
+        @dialog-close="dialogClose"
+        @update-item="updateSlide"
+        @save-dialog="addSldie"
+      ></DialogSlide>
+    </client-only>
   </div>
 </template>
 
 <script>
 import { ref, reactive } from "vue";
-import LeftBar from "~~/components/layout/LeftBar.vue";
-import Footer from "~~/components/layout/Footer.vue";
 import Table from "~~/components/table/Table.vue";
 import DialogConfirm from "~~/components/dialog/DialogConfirm.vue";
 import DialogSlide from "~~/components/slide/DialogSlide.vue";
@@ -58,8 +50,6 @@ import { useNotification } from "@kyvg/vue3-notification";
 import { uploadMultiImage } from "~~/service/upload-file";
 export default {
   components: {
-    LeftBar,
-    Footer,
     Table,
     DialogConfirm,
     DialogSlide,

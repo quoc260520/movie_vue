@@ -1,44 +1,38 @@
 <template>
   <div>
-    <v-app class="v-app">
-      <LeftBar></LeftBar>
-      <client-only>
-        <v-main>
-          <v-row cols="12" class="max-h-screen">
-            <v-col cols="9">
-              <FullCalendar :options="calendarOptions" />
-            </v-col>
-            <v-col cols="3" class="max-h-screen overflow-y-scroll scroll-auto">
-              <v-card class="mx-auto mr-2" variant="outlined">
-                <v-card-item v-for="n in 8">
-                  <div>
-                    <div class="text-overline mb-1">OVERLINE</div>
-                    <div class="text-h6 mb-1">Headline</div>
-                    <div class="text-caption">
-                      Greyhound divisely hello coldly fonwderfully
-                    </div>
-                  </div>
-                </v-card-item>
-                <v-card-actions>
-                  <v-btn variant="outlined" color="warning"> Cập nhật </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-col>
-          </v-row>
-          <DialogAddTime
-            :dialog="dialog"
-            :form="form"
-            :title="title"
-            :isAddItem="isAddItem"
-            :movies="movies"
-            :rooms="rooms"
-            @dialog-close="closeDialog"
-            @save-dialog="addTime"
-          ></DialogAddTime>
-        </v-main>
-      </client-only>
-      <Footer></Footer>
-    </v-app>
+    <client-only>
+      <v-row cols="12" class="max-h-screen">
+        <v-col cols="9">
+          <FullCalendar :options="calendarOptions" />
+        </v-col>
+        <v-col cols="3" class="max-h-screen overflow-y-scroll scroll-auto">
+          <v-card class="mx-auto mr-2" variant="outlined">
+            <v-card-item v-for="n in 8">
+              <div>
+                <div class="text-overline mb-1">OVERLINE</div>
+                <div class="text-h6 mb-1">Headline</div>
+                <div class="text-caption">
+                  Greyhound divisely hello coldly fonwderfully
+                </div>
+              </div>
+            </v-card-item>
+            <v-card-actions>
+              <v-btn variant="outlined" color="warning"> Cập nhật </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+      <DialogAddTime
+        :dialog="dialog"
+        :form="form"
+        :title="title"
+        :isAddItem="isAddItem"
+        :movies="movies"
+        :rooms="rooms"
+        @dialog-close="closeDialog"
+        @save-dialog="addTime"
+      ></DialogAddTime>
+    </client-only>
   </div>
 </template>
 
@@ -51,8 +45,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import LeftBar from "~~/components/layout/LeftBar.vue";
-import Footer from "~~/components/layout/Footer.vue";
 import DialogAddTime from "~~/components/time-movie/DialogAddTime.vue";
 import { getAllMovie as getAllMovieApi } from "~~/service/movie.ts";
 import { getAllRoom as getAllRoomApi } from "~~/service/room.ts";
@@ -60,8 +52,6 @@ import { getAllTime, createTimeMovie } from "~~/service/time-movie.ts";
 export default {
   components: {
     FullCalendar,
-    LeftBar,
-    Footer,
     DialogAddTime,
   },
   setup() {

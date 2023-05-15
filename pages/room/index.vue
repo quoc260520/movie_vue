@@ -1,46 +1,36 @@
 <template>
   <div>
-    <v-app class="v-app">
-      <LeftBar></LeftBar>
-      <client-only>
-        <v-main>
-          <v-row class="flex justify-end mt-2 mr-4">
-            <v-btn
-              color="success"
-              prepend-icon="mdi-plus"
-              @click="openAddDialog"
-            >
-              Thêm phòng
-            </v-btn>
-          </v-row>
-          <Table
-            :headers="headers"
-            :items="rooms"
-            :totalPage="totalPage"
-            @updatePage="changePage"
-            @row-click="updateRoom"
-            @delete-item="deleteRoom"
-            @restore-item="restoreRoom"
-          ></Table>
-          <RoomDialogRoom
-            :dialog="dialog"
-            :title="title"
-            :form="form"
-            :isAdd="isAdd"
-            @save-dialog="addRoom"
-            @update-dialog="updateRoomConfirm"
-            @close-dialog="closeDialog"
-          ></RoomDialogRoom>
-          <DialogConfirm
-            :dialogConfirm="dialogConfirm"
-            :title="title"
-            @dialog-confirm-close="closeDialogConfirm"
-            @confirm="confirmToggleCategory"
-          ></DialogConfirm>
-        </v-main>
-      </client-only>
-      <Footer></Footer>
-    </v-app>
+    <client-only>
+      <v-row class="flex justify-end mt-2 mr-4">
+        <v-btn color="success" prepend-icon="mdi-plus" @click="openAddDialog">
+          Thêm phòng
+        </v-btn>
+      </v-row>
+      <Table
+        :headers="headers"
+        :items="rooms"
+        :totalPage="totalPage"
+        @updatePage="changePage"
+        @row-click="updateRoom"
+        @delete-item="deleteRoom"
+        @restore-item="restoreRoom"
+      ></Table>
+      <RoomDialogRoom
+        :dialog="dialog"
+        :title="title"
+        :form="form"
+        :isAdd="isAdd"
+        @save-dialog="addRoom"
+        @update-dialog="updateRoomConfirm"
+        @close-dialog="closeDialog"
+      ></RoomDialogRoom>
+      <DialogConfirm
+        :dialogConfirm="dialogConfirm"
+        :title="title"
+        @dialog-confirm-close="closeDialogConfirm"
+        @confirm="confirmToggleCategory"
+      ></DialogConfirm>
+    </client-only>
   </div>
 </template>
 
