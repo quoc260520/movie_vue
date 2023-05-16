@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="dialogVal" persistent width="1024">
       <v-card>
-        <v-form @submit.prevent="submitForm()" :validation-schema="form">
+        <v-form @submit.prevent="handleSubmit">
           <v-card-title class="!flex justify-center mt-3">
             <span class="text-h5">{{ title }}</span>
             <v-btn
@@ -89,13 +89,10 @@
 </template>
 
 <script>
-import { computed } from "vue";
-import { useForm, useField } from "vee-validate";
-import { defineRule } from "vee-validate";
-import { required, email, min } from "@vee-validate/rules";
-defineRule("required", required);
-defineRule("email", email);
-defineRule("min", min);
+import { reactive, computed } from "vue";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email } from "@vuelidate/validators";
+
 export default {
   name: "Dialog",
   props: {
@@ -105,31 +102,28 @@ export default {
     isAddItem: [Boolean],
   },
   setup(props, { emit }) {
-    const { value: password } = useField("password", "required|min:6");
-    const { value: email } = useField("email", "required|email");
-
-    const { handleSubmit, errors } = useForm();
-
-    const submitForm = handleSubmit((values) => {
-      alert(JSON.stringify(values));
-      // submitLogin(values);
-    });
+    const dialogVal = computed(() => props.dialog);
     function closeDialog() {
       emit("dialog-close");
     }
-    const dialogVal = computed(() => props.dialog);
     function saveDialog() {
       emit("save-dialog", props.form);
     }
     function updateItem() {
-      alert(JSON.stringify(props.form));
-
       emit("update-item", props.form);
+    }
+    function handleSubmit(e) {
+      
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+
+      alert("SUCCESS!! :-)\n\n" + JSON.stringify(props.form));
     }
     return {
       dialogVal,
-      errors,
-      submitForm,
+      handleSubmit,
       closeDialog,
       saveDialog,
       updateItem,

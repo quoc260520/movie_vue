@@ -27,6 +27,7 @@
         :title="title"
         :dialog="dialog"
         :form="form"
+        :isAddItem="isAddItem"
         @dialog-close="closeDialog"
       ></DialogCoupon>
     </client-only>
@@ -96,13 +97,16 @@ export default {
     const coupons = ref([]);
     const dialogConfirm = ref(false);
     const dialog = ref(false);
-    const title = "Thêm mã giảm giá";
+    const title = ref("Thêm mã giảm giá");
+    const isAddItem = ref(true);
     function deleteConfirm() {}
     function restoreConfirm() {}
     function rowClick() {}
     function closeDialogConfirm() {}
     function confirmToggleCoupon() {}
     function openDialog() {
+      title.value = "Thêm mã giảm giá";
+      isAddItem.value = true;
       dialog.value = true;
     }
     function closeDialog() {
@@ -115,6 +119,7 @@ export default {
       title,
       dialog,
       form,
+      isAddItem,
       openDialog,
       deleteConfirm,
       restoreConfirm,

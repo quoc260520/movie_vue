@@ -7,9 +7,12 @@
 <script>
 export default {
   setup() {
+    definePageMeta({
+      layout: false,
+    });
     return {};
   },
 };
-</script>z
+</script>
 
 <style lang="scss" scoped></style>
