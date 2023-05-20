@@ -1,40 +1,36 @@
 <template>
   <div>
-    <v-app class="v-app">
-      <LeftBar></LeftBar>
-      <v-main>
-        <v-row class="flex justify-end mt-2 mr-4">
-          <v-btn color="success" prepend-icon="mdi-plus" @click="openAddDialog">
-            Thêm phòng
-          </v-btn>
-        </v-row>
-        <Table
-          :headers="headers"
-          :items="rooms"
-          :totalPage="totalPage"
-          @updatePage="changePage"
-          @row-click="updateRoom"
-          @delete-item="deleteRoom"
-          @restore-item="restoreRoom"
-        ></Table>
-        <RoomDialogRoom
-          :dialog="dialog"
-          :title="title"
-          :form="form"
-          :isAdd="isAdd"
-          @save-dialog="addRoom"
-          @update-dialog="updateRoomConfirm"
-          @close-dialog="closeDialog"
-        ></RoomDialogRoom>
-        <DialogConfirm
-          :dialogConfirm="dialogConfirm"
-          :title="title"
-          @dialog-confirm-close="closeDialogConfirm"
-          @confirm="confirmToggleCategory"
-        ></DialogConfirm>
-      </v-main>
-      <Footer></Footer>
-    </v-app>
+    <client-only>
+      <v-row class="flex justify-end mt-2 mr-4">
+        <v-btn color="success" prepend-icon="mdi-plus" @click="openAddDialog">
+          Thêm phòng
+        </v-btn>
+      </v-row>
+      <Table
+        :headers="headers"
+        :items="rooms"
+        :totalPage="totalPage"
+        @updatePage="changePage"
+        @row-click="updateRoom"
+        @delete-item="deleteRoom"
+        @restore-item="restoreRoom"
+      ></Table>
+      <RoomDialogRoom
+        :dialog="dialog"
+        :title="title"
+        :form="form"
+        :isAdd="isAdd"
+        @save-dialog="addRoom"
+        @update-dialog="updateRoomConfirm"
+        @close-dialog="closeDialog"
+      ></RoomDialogRoom>
+      <DialogConfirm
+        :dialogConfirm="dialogConfirm"
+        :title="title"
+        @dialog-confirm-close="closeDialogConfirm"
+        @confirm="confirmToggleCategory"
+      ></DialogConfirm>
+    </client-only>
   </div>
 </template>
 
@@ -136,10 +132,18 @@ export default {
       } else {
         res = await unDeleteRoom(idRoom.value);
       }
-      if(res?.data?.status == 200) {
-        renderMessage('success', isDelete.value ? 'Khóa phòng thành công' : 'Mở khóa phòng thành công')
+      if (res?.data?.status == 200) {
+        renderMessage(
+          "success",
+          isDelete.value ? "Khóa phòng thành công" : "Mở khóa phòng thành công"
+        );
       } else {
-        renderMessage('error', isDelete.value ? 'Khóa phòng không thành công' : 'Mở khóa phòng không thành công')
+        renderMessage(
+          "error",
+          isDelete.value
+            ? "Khóa phòng không thành công"
+            : "Mở khóa phòng không thành công"
+        );
       }
       initData();
       closeDialogConfirm();
@@ -161,10 +165,10 @@ export default {
         name: data.name,
         numberChair: parseInt(data.numberChair),
       });
-      if(dataRoom?.data?.status == 200) {
-        renderMessage('success', 'Thêm thành công')
+      if (dataRoom?.data?.status == 200) {
+        renderMessage("success", "Thêm thành công");
       } else {
-        renderMessage('error', 'Thêm không thành công')
+        renderMessage("error", "Thêm không thành công");
       }
       initData();
       closeDialog();
@@ -176,10 +180,10 @@ export default {
         name: dataUpdate.name,
         numberChair: parseInt(dataUpdate.numberChair),
       });
-      if(dataRoom?.data?.status == 200) {
-        renderMessage('success', 'Cập nhật thành công')
+      if (dataRoom?.data?.status == 200) {
+        renderMessage("success", "Cập nhật thành công");
       } else {
-        renderMessage('error', 'Cập nhật không thành công')
+        renderMessage("error", "Cập nhật không thành công");
       }
       initData();
       closeDialog();

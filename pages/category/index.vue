@@ -1,50 +1,43 @@
 <template>
   <div>
-    <v-app class="v-app">
-      <LeftBar></LeftBar>
-      <v-main>
-        <v-row class="flex justify-end mt-2 mr-4">
-          <v-btn
-            color="success"
-            prepend-icon="mdi-plus-circle"
-            @click="openDialog"
-          >
-            Thêm
-          </v-btn>
-        </v-row>
-        <Table
-          :headers="headers"
-          :items="categorys"
-          @delete-item="deleteConfirm"
-          @restore-item="restoreConfirm"
-          @row-click="rowClick"
-        ></Table>
-        <DialogConfirm
-          :dialogConfirm="dialogConfirm"
-          :title="title"
-          @dialog-confirm-close="closeDialogConfirm"
-          @confirm="confirmToggleCategory"
-        ></DialogConfirm>
-        <DialogCategory
-          :is-add-item="isAddItem"
-          :title="title"
-          :dialog="dialog"
-          :form="form"
-          @dialog-close="dialogClose"
-          @update-item="updateCategory"
-          @save-dialog="addCategory"
-        ></DialogCategory>
-      </v-main>
-      <Footer></Footer> 
-    </v-app
-    >
+    <client-only>
+      <v-row class="flex justify-end mt-2 mr-4">
+        <v-btn
+          color="success"
+          prepend-icon="mdi-plus-circle"
+          @click="openDialog"
+        >
+          Thêm
+        </v-btn>
+      </v-row>
+      <Table
+        :headers="headers"
+        :items="categorys"
+        @delete-item="deleteConfirm"
+        @restore-item="restoreConfirm"
+        @row-click="rowClick"
+      ></Table>
+      <DialogConfirm
+        :dialogConfirm="dialogConfirm"
+        :title="title"
+        @dialog-confirm-close="closeDialogConfirm"
+        @confirm="confirmToggleCategory"
+      ></DialogConfirm>
+      <DialogCategory
+        :is-add-item="isAddItem"
+        :title="title"
+        :dialog="dialog"
+        :form="form"
+        @dialog-close="dialogClose"
+        @update-item="updateCategory"
+        @save-dialog="addCategory"
+      ></DialogCategory>
+    </client-only>
   </div>
 </template>
 
 <script>
 import { ref, reactive } from "vue";
-import LeftBar from "~~/components/layout/LeftBar.vue";
-import Footer from "~~/components/layout/Footer.vue";
 import Table from "~~/components/table/Table.vue";
 import DialogConfirm from "~~/components/dialog/DialogConfirm.vue";
 import DialogCategory from "~~/components/category/DialogCategory.vue";
@@ -58,8 +51,6 @@ import {
 import { useNotification } from "@kyvg/vue3-notification";
 export default {
   components: {
-    LeftBar,
-    Footer,
     Table,
     DialogConfirm,
     DialogCategory,

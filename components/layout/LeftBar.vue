@@ -33,7 +33,7 @@
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <notifications />
+    <notifications position="center" />
   </div>
 </template>
 
@@ -54,6 +54,11 @@ export default {
         title: "Time movies",
         icon: "mdi-clock-time-eight-outline",
         to: "time-movie",
+      },
+      {
+        title: "Coupon",
+        icon: "mdi-ticket-percent-outline",
+        to: "coupon",
       },
     ]);
     const drawer = ref(true);

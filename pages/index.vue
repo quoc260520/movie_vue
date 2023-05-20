@@ -7,6 +7,9 @@
 <script>
 export default {
   setup() {
+    definePageMeta({
+      layout: false,
+    });
     return {};
   },
 };

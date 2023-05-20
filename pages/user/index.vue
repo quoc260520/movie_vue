@@ -1,55 +1,49 @@
 <template>
   <div>
-    <v-app class="v-app">
-      <LeftBar></LeftBar>
-      <v-main>
-        <FormSearch @search="searchUser"></FormSearch>
-        <!-- <div>
-          <v-row class="flex justify-end mb-1 mt-2 mr-4">
-            <v-btn
-              color="success"
-              prepend-icon="mdi-account-plus-outline"
-              @click="openDialog"
-            >
-              Thêm
-            </v-btn>
-          </v-row>
-        </div> -->
-        <!--
-        <Dialog
-          :dialog="dialog"
-          :isAddUser="isAddUser"
-          :title="title"
-          :form="form"
-          @dialog-close="closeDialog"
-          @save-dialog="saveDialog"
-          @update-dialog="updateUserApi"
-        ></Dialog>
-        <DialogConfirm
-          :dialogConfirm="dialogConfirm"
-          :title="title"
-          @dialog-confirm-close="closeDialogConfirm"
-          @confirm="confirmToggleUser"
-        ></DialogConfirm>
-        <TableUser
-          :users="users"
-          :totalPage="totalPage"
-          @row-click="rowClick"
-          @delete-user="deleteUserConfirm"
-          @restore-delete-user="restoreDeleteUser"
-          @update-page="updatePage"
-          class="p-4 pt-0"
-        ></TableUser>
-        <v-overlay
-          :opacity="1"
-          v-model="loading"
-          class="flex justify-center items-center"
+    <client-only>
+      <FormSearch @search="searchUser"></FormSearch>
+      <v-row class="flex justify-end mb-2 mt-2 mr-4">
+        <v-btn
+          color="success"
+          prepend-icon="mdi-account-plus-outline"
+          @click="openDialog"
         >
-          <v-progress-circular indeterminate size="48"> </v-progress-circular>
-        </v-overlay> -->
-      </v-main>
-      <Footer></Footer>
-    </v-app>
+          Thêm
+        </v-btn>
+      </v-row>
+
+      <Dialog
+        :dialog="dialog"
+        :isAddUser="isAddUser"
+        :title="title"
+        :form="form"
+        @dialog-close="closeDialog"
+        @save-dialog="saveDialog"
+        @update-dialog="updateUserApi"
+      ></Dialog>
+      <DialogConfirm
+        :dialogConfirm="dialogConfirm"
+        :title="title"
+        @dialog-confirm-close="closeDialogConfirm"
+        @confirm="confirmToggleUser"
+      ></DialogConfirm>
+      <TableUser
+        :users="users"
+        :totalPage="totalPage"
+        @row-click="rowClick"
+        @delete-user="deleteUserConfirm"
+        @restore-delete-user="restoreDeleteUser"
+        @update-page="updatePage"
+        class="p-4 pt-0"
+      ></TableUser>
+      <v-overlay
+        :opacity="1"
+        v-model="loading"
+        class="flex justify-center items-center"
+      >
+        <v-progress-circular indeterminate size="48"> </v-progress-circular>
+      </v-overlay>
+    </client-only>
   </div>
 </template>
 
@@ -80,6 +74,9 @@ export default {
     DialogConfirm,
   },
   setup() {
+    definePageMeta({
+      middleware: ["auth"],
+    });
     const notification = useNotification();
     const tab = ref(null);
     const users = ref([]);
