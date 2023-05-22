@@ -13,9 +13,11 @@
       <Table
         :headers="headers"
         :items="coupons"
+        :totalPage="totalPage"
         @delete-item="deleteConfirm"
         @restore-item="restoreConfirm"
         @row-click="rowClick"
+        @update-page="updatePage"
       ></Table>
       <DialogConfirm
         :dialogConfirm="dialogConfirm"
@@ -29,9 +31,9 @@
         :form="form"
         :isAddItem="isAddItem"
         @dialog-close="closeDialog"
+        @save-dialog="addCoupon"
       ></DialogCoupon>
     </client-only>
-    <notifications />
   </div>
 </template>
 
@@ -39,6 +41,12 @@
 import Table from "~~/components/table/Table.vue";
 import DialogConfirm from "~~/components/dialog/DialogConfirm.vue";
 import DialogCoupon from "~~/components/coupon/DialogCoupon.vue";
+import moment from "moment";
+import { useNotification } from "@kyvg/vue3-notification";
+import {
+  getAllCoupon as getAllCouponApi,
+  createCoupon,
+} from "~~/service/coupon.ts";
 export default {
   components: {
     DialogConfirm,
@@ -46,6 +54,7 @@ export default {
     DialogCoupon,
   },
   setup() {
+    const notification = useNotification();
     const headers = reactive([
       {
         title: "Tên mã",
@@ -89,8 +98,8 @@ export default {
     const form = ref({
       id: "",
       name: "",
-      timeStart: "",
-      timeEnd: "",
+      timeStart: new Date(),
+      timeEnd: new Date(),
       code: "",
       discount: "",
     });
@@ -99,6 +108,9 @@ export default {
     const dialog = ref(false);
     const title = ref("Thêm mã giảm giá");
     const isAddItem = ref(true);
+    const currentPage = ref(1);
+    const totalPage = ref(1);
+
     function deleteConfirm() {}
     function restoreConfirm() {}
     function rowClick() {}
@@ -112,6 +124,44 @@ export default {
     function closeDialog() {
       dialog.value = false;
     }
+    function optionGet(skip = 1, take = 10) {
+      return {
+        skip: (skip - 1) * take,
+        take: take,
+      };
+    }
+    async function addCoupon(data) {
+      const res = await createCoupon({
+        name: data.name,
+        timeStart: moment(data.timeStart).toISOString(),
+        timeEnd: moment(data.timeEnd).toISOString(),
+        discount: parseInt(data.discount),
+      });
+      if (res?.data?.status == 200) {
+        renderMessage("success", "Thêm mã giảm giá thành công");
+        getAllCoupon(optionGet);
+      } else {
+        renderMessage("error", "Thêm mã giảm giá không thành công");
+      }
+      closeDialog();
+    }
+    async function getAllCoupon(option) {
+      const res = await getAllCouponApi(option);
+      coupons.value = res?.data?.data;
+      totalPage.value = res?.data?.page;
+    }
+    async function updatePage(page) {
+      getAllCoupon(optionGet(page));
+    }
+    function renderMessage(type, message) {
+      notification.notify({
+        title: message,
+        type: type,
+      });
+    }
+    onMounted(() => {
+      getAllCoupon(optionGet());
+    });
     return {
       headers,
       coupons,
@@ -120,6 +170,7 @@ export default {
       dialog,
       form,
       isAddItem,
+      totalPage,
       openDialog,
       deleteConfirm,
       restoreConfirm,
@@ -127,6 +178,9 @@ export default {
       closeDialogConfirm,
       confirmToggleCoupon,
       closeDialog,
+      addCoupon,
+      getAllCoupon,
+      updatePage,
     };
   },
 };

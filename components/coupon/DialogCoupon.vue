@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="dialogVal" persistent width="1024">
       <v-card>
-        <v-form @submit.prevent="handleSubmit">
+        <v-form @submit.prevent="submitForm()">
           <v-card-title class="!flex justify-center mt-3">
             <span class="text-h5">{{ title }}</span>
             <v-btn
@@ -20,30 +20,16 @@
                   <v-text-field
                     label="Tên mã (*)"
                     required
-                    v-model="form.name"
+                    v-model="name"
+                    :error-messages="errors.name"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
                     label="Code (*)"
                     required
-                    v-model="form.code"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row class="justify-center">
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field
-                    label="Thời gian bắt đầu (*)"
-                    required
-                    v-model="form.timeStart"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field
-                    label="Thời gian kết thúc (*)"
-                    required
-                    v-model="form.timeEnd"
+                    v-model="code"
+                    :error-messages="errors.code"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -52,8 +38,43 @@
                   <v-text-field
                     label="Giảm (*)"
                     required
-                    v-model="form.discount"
+                    v-model="discount"
+                    :error-messages="errors.discount"
                   ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row class="justify-center">
+                <v-col cols="12" sm="6" md="6" class="justify-center">
+                  <div class="space-y-2">
+                    <div class="flex items-center space-x-2">
+                      <label>Thời gian bắt đầu (*)</label>
+                    </div>
+                    <VDatePicker
+                      v-model="timeStart"
+                      mode="dateTime"
+                      :min-date="Date.now()"
+                      is24hr
+                    />
+                    <div class="ms-3 text-[#b00020] !text-[12px]">
+                      {{ errors.timeStart }}
+                    </div>
+                  </div>
+                </v-col>
+                <v-col cols="12" sm="6" md="6" class="justify-center">
+                  <div class="space-y-2">
+                    <div class="flex items-center space-x-2">
+                      <label>Thời gian kết thúc (*)</label>
+                    </div>
+                    <VDatePicker
+                      v-model="timeEnd"
+                      mode="dateTime"
+                      :min-date="Date.now()"
+                      is24hr
+                    />
+                    <div class="ms-3 text-[#b00020] !text-[12px]">
+                      {{ errors.timeEnd }}
+                    </div>
+                  </div>
                 </v-col>
               </v-row>
             </v-container>
@@ -63,22 +84,10 @@
             <v-btn color="error" variant="flat" @click="closeDialog">
               Hủy
             </v-btn>
-            <v-btn
-              v-if="isAddItem"
-              color="blue"
-              variant="flat"
-              type="submit"
-              @click="saveDialog"
-            >
+            <v-btn v-if="isAddItem" color="blue" variant="flat" type="submit">
               Thêm
             </v-btn>
-            <v-btn
-              v-else
-              color="blue"
-              variant="flat"
-              type="submit"
-              @click="updateItem"
-            >
+            <v-btn v-else color="blue" variant="flat" type="submit">
               Cập nhật
             </v-btn>
           </v-card-actions>
@@ -90,9 +99,12 @@
 
 <script>
 import { reactive, computed } from "vue";
-import { useVuelidate } from "@vuelidate/core";
-import { required, email } from "@vuelidate/validators";
-
+import { useForm, useField } from "vee-validate";
+import { defineRule } from "vee-validate";
+import { required, email, min } from "@vee-validate/rules";
+defineRule("required", required);
+defineRule("email", email);
+defineRule("min", min);
 export default {
   name: "Dialog",
   props: {
@@ -103,30 +115,58 @@ export default {
   },
   setup(props, { emit }) {
     const dialogVal = computed(() => props.dialog);
+
+    const { handleSubmit, errors } = useForm({
+      initialValues: props.form,
+    });
+    function dateAfter(value) {
+      const end = new Date(value).getTime();
+      const start = new Date(timeStart.value).getTime();
+      if (start <= end) {
+        return true;
+      }
+      return "The end date must be after the start date";
+    }
+
+    const { value: name } = useField("name", "required");
+    const { value: code } = useField("code");
+    const { value: timeStart } = useField("timeStart", "required");
+    const { value: timeEnd } = useField("timeEnd", dateAfter);
+    const { value: discount } = useField("discount", "required");
+
+    const submitForm = handleSubmit((values) => {
+      submitLogin(values);
+    });
+
     function closeDialog() {
       emit("dialog-close");
     }
-    function saveDialog() {
-      emit("save-dialog", props.form);
+    function saveDialog(values) {
+      emit("save-dialog", values);
     }
-    function updateItem() {
-      emit("update-item", props.form);
+    function updateItem(values) {
+      emit("update-item", values);
     }
-    function handleSubmit(e) {
-      
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        return;
+    function submitLogin(values) {
+      if (props.isAddItem) {
+        saveDialog(values);
+      } else {
+        updateItem(values);
       }
-
-      alert("SUCCESS!! :-)\n\n" + JSON.stringify(props.form));
     }
     return {
+      name,
+      code,
+      timeStart,
+      timeEnd,
+      discount,
+      errors,
       dialogVal,
       handleSubmit,
       closeDialog,
       saveDialog,
       updateItem,
+      submitForm,
     };
   },
 };
