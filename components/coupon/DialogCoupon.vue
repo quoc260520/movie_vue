@@ -101,10 +101,13 @@
 import { reactive, computed } from "vue";
 import { useForm, useField } from "vee-validate";
 import { defineRule } from "vee-validate";
-import { required, email, min } from "@vee-validate/rules";
+import { required, email, min, max, numeric, between } from "@vee-validate/rules";
 defineRule("required", required);
 defineRule("email", email);
 defineRule("min", min);
+defineRule("max", max);
+defineRule("numeric", numeric);
+defineRule("between", between);
 export default {
   name: "Dialog",
   props: {
@@ -132,7 +135,7 @@ export default {
     const { value: code } = useField("code");
     const { value: timeStart } = useField("timeStart", "required");
     const { value: timeEnd } = useField("timeEnd", dateAfter);
-    const { value: discount } = useField("discount", "required");
+    const { value: discount } = useField("discount", "required|numeric|between:1,100");
 
     const submitForm = handleSubmit((values) => {
       submitLogin(values);

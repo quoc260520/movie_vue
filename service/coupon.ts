@@ -21,14 +21,14 @@ export async function updateCategory(data: any) {
   });
 }
 
-export async function deleteCategory(id: number) {
-  return request(`/category/delete/${id}`, {
+export async function deleteCoupon(id: number) {
+  return request(`/coupon/delete/${id}`, {
     method: "PUT",
   });
 }
 
-export async function unDeleteCategory(id: number) {
-  return request(`/category/un-delete/${id}`, {
+export async function unDeleteCoupon(id: number) {
+  return request(`/coupon/un-delete/${id}`, {
     method: "PUT",
   });
 }

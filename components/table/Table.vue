@@ -7,6 +7,12 @@
       loading
       loading-text="Loading... Please wait"
     >
+    <template v-slot:item.timeStart="{ item }">
+      <td>{{ item.timeStart }}</td>
+    </template>
+    <template v-slot:item.timeEnd="{ item }">
+      <td>{{ item.timeEnd }}</td>
+    </template>
       <template v-slot:item.image="{ item }">
         <v-img
           :width="200"
@@ -57,6 +63,7 @@
 
 <script>
 import { ref, reactive, computed } from "vue";
+import moment from "moment";
 export default {
   props: {
     items: {

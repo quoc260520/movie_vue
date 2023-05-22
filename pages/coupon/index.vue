@@ -46,6 +46,8 @@ import { useNotification } from "@kyvg/vue3-notification";
 import {
   getAllCoupon as getAllCouponApi,
   createCoupon,
+  deleteCoupon,
+  unDeleteCoupon
 } from "~~/service/coupon.ts";
 export default {
   components: {
@@ -93,7 +95,7 @@ export default {
         key: "action",
         sortable: false,
         width: "10%",
-      },
+    },
     ]);
     const form = ref({
       id: "",
@@ -108,14 +110,36 @@ export default {
     const dialog = ref(false);
     const title = ref("Thêm mã giảm giá");
     const isAddItem = ref(true);
+    const isDelete = ref(true);
+    const idCoupon = ref(0);
     const currentPage = ref(1);
     const totalPage = ref(1);
 
-    function deleteConfirm() {}
-    function restoreConfirm() {}
+    function deleteConfirm(id) {
+      idCoupon.value = id;
+      isDelete.value = true;
+      dialogConfirm.value = true;
+      title.value = "Bạn có muốn xóa mã giảm giá này không?"
+    }
+    function restoreConfirm(id) {
+      idCoupon.value = id;
+      isDelete.value = false;
+      dialogConfirm.value = true;
+      title.value = "Bạn có muốn hoàn tác mã giảm giá này không?"
+    }
     function rowClick() {}
-    function closeDialogConfirm() {}
-    function confirmToggleCoupon() {}
+    function closeDialogConfirm() {
+      dialogConfirm.value = false;
+    }
+    async function confirmToggleCoupon() {
+      if(isDelete.value) {
+        await deleteCoupon(idCoupon.value)
+      } else {
+        await unDeleteCoupon(idCoupon.value)
+      }
+      getAllCoupon();
+      closeDialogConfirm();
+    }
     function openDialog() {
       title.value = "Thêm mã giảm giá";
       isAddItem.value = true;
@@ -132,25 +156,26 @@ export default {
     }
     async function addCoupon(data) {
       const res = await createCoupon({
-        name: data.name,
+        name: (data.name).toUpperCase(),
         timeStart: moment(data.timeStart).toISOString(),
         timeEnd: moment(data.timeEnd).toISOString(),
         discount: parseInt(data.discount),
       });
       if (res?.data?.status == 200) {
         renderMessage("success", "Thêm mã giảm giá thành công");
-        getAllCoupon(optionGet);
+        getAllCoupon();
       } else {
         renderMessage("error", "Thêm mã giảm giá không thành công");
       }
       closeDialog();
     }
-    async function getAllCoupon(option) {
+    async function getAllCoupon(option = {}) {
       const res = await getAllCouponApi(option);
       coupons.value = res?.data?.data;
       totalPage.value = res?.data?.page;
     }
     async function updatePage(page) {
+      currentPage.value = page;
       getAllCoupon(optionGet(page));
     }
     function renderMessage(type, message) {
