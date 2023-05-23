@@ -44,7 +44,7 @@ export default {
     const route = useRouter();
     const items = ref([
       { title: "Home", icon: "mdi-home-city", to: "dashboard" },
-      { title: "My Account", icon: "mdi-account", to: "/" },
+      // { title: "My Account", icon: "mdi-account", to: "/" },
       { title: "Users", icon: "mdi-account-group-outline", to: "user" },
       { title: "Movies", icon: "mdi-movie-open-outline", to: "movie" },
       { title: "Categorys", icon: "mdi-list-box-outline", to: "category" },

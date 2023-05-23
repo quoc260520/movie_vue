@@ -7,6 +7,12 @@ export async function getAllCoupon(params: any) {
   });
 }
 
+export async function getCoupon(id: number) {
+  return request(`/coupon/${id}`, {
+    method: "GET",
+  });
+}
+
 export async function createCoupon(data: any) {
   return request("/coupon", {
     method: "POST",
@@ -14,8 +20,8 @@ export async function createCoupon(data: any) {
   });
 }
 
-export async function updateCategory(data: any) {
-  return request(`/category/update/${data.id}`, {
+export async function updateCoupon(data: any) {
+  return request(`/coupon/${data.id}`, {
     method: "PUT",
     data: data,
   });

@@ -18,7 +18,7 @@
               <v-row class="justify-center">
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
-                    label="Tên mã (*)"
+                    label="Mô tả (*)"
                     required
                     v-model="name"
                     :error-messages="errors.name"
@@ -26,8 +26,8 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
-                    label="Code (*)"
-                    required
+                    label="Code"
+                    disabled
                     v-model="code"
                     :error-messages="errors.code"
                   ></v-text-field>
@@ -36,10 +36,18 @@
               <v-row class="justify-center">
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
-                    label="Giảm (*)"
+                    label="Phần trăm giảm (*)"
                     required
                     v-model="discount"
                     :error-messages="errors.discount"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field
+                    label="Giảm tối đa (*,đ)"
+                    required
+                    v-model="maxDiscount"
+                    :error-messages="errors.maxDiscount"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -101,7 +109,14 @@
 import { reactive, computed } from "vue";
 import { useForm, useField } from "vee-validate";
 import { defineRule } from "vee-validate";
-import { required, email, min, max, numeric, between } from "@vee-validate/rules";
+import {
+  required,
+  email,
+  min,
+  max,
+  numeric,
+  between,
+} from "@vee-validate/rules";
 defineRule("required", required);
 defineRule("email", email);
 defineRule("min", min);
@@ -118,8 +133,22 @@ export default {
   },
   setup(props, { emit }) {
     const dialogVal = computed(() => props.dialog);
-
-    const { handleSubmit, errors } = useForm({
+    watch(
+      () => props.form,
+      (newValue, prev) => {
+        if (props.isAddItem) {
+          resetForm();
+        } else {
+          setFieldValue("name", newValue.name);
+          setFieldValue("code", newValue.code);
+          // setFieldValue("maxDiscount", newValue.maxDiscount);
+          setFieldValue("timeStart", newValue.timeStart);
+          setFieldValue("timeEnd", newValue.timeEnd);
+          setFieldValue("discount", newValue.discount);
+        }
+      }
+    );
+    const { handleSubmit, errors, setFieldValue, resetForm } = useForm({
       initialValues: props.form,
     });
     function dateAfter(value) {
@@ -133,9 +162,13 @@ export default {
 
     const { value: name } = useField("name", "required");
     const { value: code } = useField("code");
+    const { value: maxDiscount } = useField("maxDiscount");
     const { value: timeStart } = useField("timeStart", "required");
     const { value: timeEnd } = useField("timeEnd", dateAfter);
-    const { value: discount } = useField("discount", "required|numeric|between:1,100");
+    const { value: discount } = useField(
+      "discount",
+      "required|numeric|between:1,100"
+    );
 
     const submitForm = handleSubmit((values) => {
       submitLogin(values);
@@ -160,6 +193,7 @@ export default {
     return {
       name,
       code,
+      maxDiscount,
       timeStart,
       timeEnd,
       discount,

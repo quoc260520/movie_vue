@@ -5,7 +5,7 @@
         <v-btn
           color="success"
           prepend-icon="mdi-plus-circle"
-          @click="openDialog"
+          @click="openDialog('Thêm mã giảm giá')"
         >
           Thêm mã giảm giá
         </v-btn>
@@ -32,6 +32,7 @@
         :isAddItem="isAddItem"
         @dialog-close="closeDialog"
         @save-dialog="addCoupon"
+        @update-item="updateItem"
       ></DialogCoupon>
     </client-only>
   </div>
@@ -47,7 +48,8 @@ import {
   getAllCoupon as getAllCouponApi,
   createCoupon,
   deleteCoupon,
-  unDeleteCoupon
+  unDeleteCoupon,
+  updateCoupon,
 } from "~~/service/coupon.ts";
 export default {
   components: {
@@ -59,10 +61,9 @@ export default {
     const notification = useNotification();
     const headers = reactive([
       {
-        title: "Tên mã",
-        key: "name",
-        width: "15%",
-        align: "center",
+        title: "Mã code",
+        key: "code",
+        width: "10%",
       },
       {
         title: "Thời gian bắt đầu",
@@ -75,16 +76,21 @@ export default {
         width: "15%",
       },
       {
-        title: "Mã code",
-        key: "code",
-        width: "15%",
-      },
-      {
         title: "Giảm",
         key: "discount",
-        width: "15%",
+        width: "5%",
       },
-      ,
+      {
+        title: "Giảm tối đa",
+        key: "maxDiscount",
+        width: "10%",
+      },
+      {
+        title: "Mô tả",
+        key: "name",
+        width: "20%",
+        align: "center",
+      },
       {
         title: "Trạng thái",
         key: "deleteFlg",
@@ -95,7 +101,7 @@ export default {
         key: "action",
         sortable: false,
         width: "10%",
-    },
+      },
     ]);
     const form = ref({
       id: "",
@@ -104,11 +110,12 @@ export default {
       timeEnd: new Date(),
       code: "",
       discount: "",
+      maxDiscount: "",
     });
     const coupons = ref([]);
     const dialogConfirm = ref(false);
     const dialog = ref(false);
-    const title = ref("Thêm mã giảm giá");
+    const title = ref("");
     const isAddItem = ref(true);
     const isDelete = ref(true);
     const idCoupon = ref(0);
@@ -119,30 +126,52 @@ export default {
       idCoupon.value = id;
       isDelete.value = true;
       dialogConfirm.value = true;
-      title.value = "Bạn có muốn xóa mã giảm giá này không?"
+      title.value = "Bạn có muốn xóa mã giảm giá này không?";
     }
     function restoreConfirm(id) {
       idCoupon.value = id;
       isDelete.value = false;
       dialogConfirm.value = true;
-      title.value = "Bạn có muốn hoàn tác mã giảm giá này không?"
+      title.value = "Bạn có muốn hoàn tác mã giảm giá này không?";
     }
-    function rowClick() {}
+    function rowClick(data) {
+      form.value = { ...form.value, ...data };
+      openDialog("Cập nhật mã giảm giá", 1);
+    }
+    async function updateItem(data) {
+      const res = await updateCoupon({...data, id: form.value?.id });
+      if (res?.data?.status == 200) {
+        renderMessage("success", "Cập nhật mã giảm giá thành công");
+        getAllCoupon();
+      } else {
+        renderMessage("error", "Cập nhật mã giảm giá không thành công");
+      }
+      closeDialog();
+    }
     function closeDialogConfirm() {
       dialogConfirm.value = false;
     }
     async function confirmToggleCoupon() {
-      if(isDelete.value) {
-        await deleteCoupon(idCoupon.value)
+      if (isDelete.value) {
+        const res = await deleteCoupon(idCoupon.value);
+        if (res?.data?.status == 200) {
+          renderMessage("success", "Xóa mã giảm giá thành công");
+          getAllCoupon();
+        } else {
+          renderMessage("error", "Xóa mã giảm giá không thành công");
+        }
       } else {
-        await unDeleteCoupon(idCoupon.value)
+        await unDeleteCoupon(idCoupon.value);
       }
       getAllCoupon();
       closeDialogConfirm();
     }
-    function openDialog() {
-      title.value = "Thêm mã giảm giá";
-      isAddItem.value = true;
+    function openDialog(titleDialog, isAdd = false) {
+      title.value = titleDialog;
+      isAddItem.value = !isAdd;
+      if (!isAdd) {
+        form.value = {};
+      }
       dialog.value = true;
     }
     function closeDialog() {
@@ -156,7 +185,7 @@ export default {
     }
     async function addCoupon(data) {
       const res = await createCoupon({
-        name: (data.name).toUpperCase(),
+        name: data.name.toUpperCase(),
         timeStart: moment(data.timeStart).toISOString(),
         timeEnd: moment(data.timeEnd).toISOString(),
         discount: parseInt(data.discount),
@@ -196,6 +225,7 @@ export default {
       form,
       isAddItem,
       totalPage,
+      updateItem,
       openDialog,
       deleteConfirm,
       restoreConfirm,

@@ -2,12 +2,13 @@
   <div>
     <v-row justify="center">
       <v-dialog v-model="dialogVal" persistent width="620">
-        <v-form @submit.prevent>
+        <v-form @submit.prevent="submitForm()">
           <v-card>
             <v-card-title class="!flex justify-center mt-3">
               <span class="text-h5">{{ title }}</span>
               <v-btn
-                variant="text !absolute top-3 right-0"
+                variant="text"
+                class="!absolute top-3 right-0"
                 @click="closeDialog"
               >
                 <v-icon>mdi-close</v-icon>
@@ -18,11 +19,11 @@
                 <v-row class="justify-center">
                   <v-col cols="9" sm="9">
                     <v-select
-                      v-model="form.movieId"
+                      v-model="movieId"
                       :items="moviesData"
+                      :error-messages="errors.movieId"
                       item-title="nameMovie"
                       item-value="id"
-                      :rules="[rules.required]"
                       label="Tên phim (*)"
                       required
                     ></v-select>
@@ -31,34 +32,23 @@
                 <v-row class="justify-center">
                   <v-col cols="9" sm="9">
                     <v-select
-                      v-model="form.roomIds"
+                      v-model="roomIds"
+                      :error-messages="errors.roomIds"
                       :items="rooms"
                       item-title="name"
                       item-value="id"
-                      :rules="[rules.required]"
                       label="Phòng (*)"
                       chips
                       multiple
-                      required
                     ></v-select>
-                    <!-- <v-select
-                      v-model="form.roomIds"
-                      :items="rooms"
-                      item-title="name"
-                      item-value="id"
-                      :rules="[rules.required]"
-                      label="Phòng (*)"
-                      chips
-                      required
-                    ></v-select> -->
                   </v-col>
                 </v-row>
                 <v-row class="justify-center">
                   <v-col cols="9" sm="9">
                     <v-text-field
                       label="Giá vé (*)"
-                      :rules="[rules.required]"
-                      v-model="form.price"
+                      v-model="price"
+                      :error-messages="errors.price"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -68,13 +58,10 @@
                       <div class="flex items-center space-x-2">
                         <label> Thời gian bắt đầu </label>
                       </div>
-                      <VDatePicker
-                        v-model="form.startDate"
-                        mode="time"
-                        :timezone="timezone"
-                        :rules="rulesTime"
-                        is24hr
-                      />
+                      <VDatePicker v-model="startDate" mode="time" is24hr />
+                      <div class="text-[#b00020] !text-[12px]">
+                        {{ errors.startDate }}
+                      </div>
                     </div>
                   </v-col>
                   <v-col cols="4" sm="4" class="justify-center">
@@ -82,13 +69,10 @@
                       <div class="flex items-center space-x-2">
                         <label> Thời gian kết thúc </label>
                       </div>
-                      <VDatePicker
-                        v-model="form.endDate"
-                        mode="time"
-                        :timezone="timezone"
-                        :rules="rulesTime"
-                        is24hr
-                      />
+                      <VDatePicker v-model="endDate" mode="time" is24hr />
+                      <div class="text-[#b00020] !text-[12px]">
+                        {{ errors.endDate }}
+                      </div>
                     </div>
                   </v-col>
                 </v-row>
@@ -99,22 +83,10 @@
               <v-btn color="error" variant="flat" @click="closeDialog">
                 Hủy
               </v-btn>
-              <v-btn
-                type="submit"
-                v-if="isAddItem"
-                color="blue"
-                variant="flat"
-                @click="saveDialog"
-              >
+              <v-btn type="submit" v-if="isAddItem" color="blue" variant="flat">
                 Thêm
               </v-btn>
-              <v-btn
-                v-else
-                type="submit"
-                color="blue"
-                variant="flat"
-                @click="updateItem"
-              >
+              <v-btn v-else type="submit" color="blue" variant="flat">
                 Cập nhật
               </v-btn>
             </v-card-actions>
@@ -127,34 +99,56 @@
 
 <script>
 import { ref, reactive, computed } from "vue";
+import { useForm, useField } from "vee-validate";
+import { defineRule } from "vee-validate";
+import { required, min, max, numeric } from "@vee-validate/rules";
+defineRule("required", required);
+defineRule("min", min);
+defineRule("max", max);
+defineRule("numeric", numeric);
 export default {
   name: "DialogAddTime",
   props: {
     dialog: Boolean,
     title: String,
-    form: [Object, Array],
     isAddItem: Boolean,
+    form: [Object, Array],
     movies: [Object, Array],
     rooms: [Object, Array],
   },
   setup(props, { emit }) {
-    const rules = reactive({
-      required: (value) => !!value || "Không được bỏ trống.",
-    });
     const moviesData = ref({});
-    const rulesTime = ref({
-      minutes: { interval: 5 },
-    });
+
     function closeDialog() {
       emit("dialog-close");
     }
     const dialogVal = computed(() => props.dialog);
-    function saveDialog() {
-      emit("save-dialog", props.form);
+    function saveDialog(values) {
+      emit("save-dialog", values);
     }
-    function updateItem() {
-      emit("update-item", props.form);
+    function updateItem(values) {
+      emit("update-item", values);
     }
+    function dateAfter(value) {
+      const end = new Date(value).getTime();
+      const start = new Date(startDate.value).getTime();
+      if (start < end) {
+        return true;
+      }
+      return "The end time must be after the start time";
+    }
+    const { handleSubmit, errors } = useForm({
+      initialValues: props.form,
+    });
+    const { value: movieId } = useField("movieId", "required");
+    const { value: roomIds } = useField("roomIds", "required");
+    const { value: price } = useField("price", "required");
+    const { value: startDate } = useField("startDate", "required");
+    const { value: endDate } = useField("endDate", dateAfter);
+    const submitForm = handleSubmit((values) => {
+      saveDialog(values);
+    });
+
     const now = computed(() => Date.now());
     watch(
       () => props.movies,
@@ -164,9 +158,15 @@ export default {
     );
     return {
       dialogVal,
-      rules,
       moviesData,
-      rulesTime,
+      errors,
+      movieId,
+      roomIds,
+      price,
+      startDate,
+      endDate,
+      handleSubmit,
+      submitForm,
       closeDialog,
       saveDialog,
       updateItem,

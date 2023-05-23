@@ -6,8 +6,8 @@
           <FullCalendar :options="calendarOptions" />
         </v-col>
         <v-col cols="3" class="max-h-screen overflow-y-scroll scroll-auto">
-          <v-card class="mx-auto mr-2" variant="outlined">
-            <v-card-item v-for="n in 8">
+          <v-card class="mx-auto mr-2" variant="outlined" height="90vh">
+            <v-card-item v-for="n in 1">
               <div>
                 <div class="text-overline mb-1">OVERLINE</div>
                 <div class="text-h6 mb-1">Headline</div>
@@ -59,6 +59,9 @@ export default {
     const dialog = ref(false);
     const title = ref("Thêm khung giờ chiếu phim");
     const form = reactive({
+      movieId: "",
+      roomIds: [],
+      price: "",
       startDate: new Date(),
       endDate: new Date(),
     });
@@ -91,7 +94,14 @@ export default {
       },
       events: timeLine.value,
       dateClick: function (info) {
-        clickDate(info);
+        var clickedDate = info.date;
+        var now = new Date();
+        now.setHours(0, 0, 0, 0);
+        if (clickedDate >= now) {
+          clickDate(info);
+        } else {
+          return;
+        }
       },
       eventClick: function (info) {
         console.log(info);
@@ -119,6 +129,7 @@ export default {
         timeEnd: moment(data.endDate).toISOString(),
       });
       closeDialog();
+      getAllTimeMovie();
     }
     async function getAllMovie() {
       const res = await getAllMovieApi({ deleteFlg: false });

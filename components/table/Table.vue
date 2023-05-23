@@ -7,12 +7,12 @@
       loading
       loading-text="Loading... Please wait"
     >
-    <template v-slot:item.timeStart="{ item }">
-      <td>{{ item.timeStart }}</td>
-    </template>
-    <template v-slot:item.timeEnd="{ item }">
-      <td>{{ item.timeEnd }}</td>
-    </template>
+      <template v-slot:item.timeStart="{ item }">
+        <td>{{ new Date(item.raw.timeStart).toLocaleString() }}</td>
+      </template>
+      <template v-slot:item.timeEnd="{ item }">
+        <td>{{ new Date(item.raw.timeEnd).toLocaleString() }}</td>
+      </template>
       <template v-slot:item.image="{ item }">
         <v-img
           :width="200"
@@ -108,7 +108,7 @@ export default {
       deleteItem,
       restoreItem,
       updatePage,
-      getColor
+      getColor,
     };
   },
 };
