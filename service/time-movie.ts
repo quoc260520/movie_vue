@@ -14,3 +14,15 @@ export async function createTimeMovie(data: any) {
   });
 }
 
+export async function updateTimeMovie(data: any) {
+  return request(`/showtime-movie/update/${data.id}`, {
+    method: "PUT",
+    data: data,
+  });
+}
+
+export async function deleteTimeMovie(id: number) {
+  return request(`/showtime-movie/delete/${id}`, {
+    method: "PUT",
+  });
+}

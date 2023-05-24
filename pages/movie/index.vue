@@ -153,11 +153,13 @@ export default {
     async function createMovie(data) {
       try {
         const formData = new FormData();
-        for (let i = 0; i < data.fileImages.length; i++) {
-          formData.append("file", data.fileImages[i]);
+        if (data.fileImages?.length) {
+          for (let i = 0; i < data.fileImages.length; i++) {
+            formData.append("file", data.fileImages[i]);
+          }
+          const thumps = await uploadMultiImage(formData);
+          data.thumbnail = thumps?.data?.data.map((thump) => thump.url);
         }
-        const thumps = await uploadMultiImage(formData);
-        data.thumbnail = thumps?.data?.data.map((thump) => thump.url);
         const dataCreate = {
           nameMovie: data.nameMovie,
           description: data.description,

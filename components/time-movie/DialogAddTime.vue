@@ -17,7 +17,7 @@
             <v-card-text>
               <v-container>
                 <v-row class="justify-center">
-                  <v-col cols="9" sm="9">
+                  <v-col cols="6" sm="6">
                     <v-select
                       v-model="movieId"
                       :items="moviesData"
@@ -26,7 +26,15 @@
                       item-value="id"
                       label="Tên phim (*)"
                       required
+                      @update:modelValue="changeMovie"
                     ></v-select>
+                  </v-col>
+                  <v-col cols="3" sm="3">
+                    <v-text-field
+                      disabled
+                      label="Thời gian"
+                      v-model="time"
+                    ></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row class="justify-center">
@@ -39,7 +47,7 @@
                       item-value="id"
                       label="Phòng (*)"
                       chips
-                      multiple
+                      :multiple="isAddItem"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -98,7 +106,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed } from "vue";
+import { ref, computed } from "vue";
 import { useForm, useField } from "vee-validate";
 import { defineRule } from "vee-validate";
 import { required, min, max, numeric } from "@vee-validate/rules";
@@ -118,6 +126,7 @@ export default {
   },
   setup(props, { emit }) {
     const moviesData = ref({});
+    const time = ref(0);
 
     function closeDialog() {
       emit("dialog-close");
@@ -127,17 +136,23 @@ export default {
       emit("save-dialog", values);
     }
     function updateItem(values) {
-      emit("update-item", values);
+      emit("update-item", { ...values, id: props.form.id });
     }
     function dateAfter(value) {
       const end = new Date(value).getTime();
       const start = new Date(startDate.value).getTime();
-      if (start < end) {
-        return true;
+      if (start > end) {
+        return "The end time must be after the start time";
       }
-      return "The end time must be after the start time";
+      if (movieId.value) {
+        const movie = props.movies.find((movie) => movie.id === movieId.value);
+        if (movie && end - start < movie.timeMovie * 60 * 1000) {
+          return "Movie show time is not enough";
+        }
+      }
+      return true;
     }
-    const { handleSubmit, errors } = useForm({
+    const { handleSubmit, errors, resetForm, setFieldValue } = useForm({
       initialValues: props.form,
     });
     const { value: movieId } = useField("movieId", "required");
@@ -146,10 +161,29 @@ export default {
     const { value: startDate } = useField("startDate", "required");
     const { value: endDate } = useField("endDate", dateAfter);
     const submitForm = handleSubmit((values) => {
-      saveDialog(values);
+      if (props.isAddItem) {
+        saveDialog(values);
+      } else {
+        updateItem(values);
+      }
     });
-
-    const now = computed(() => Date.now());
+    function changeMovie(id) {
+      const movie = props.movies.find((movie) => movie.id === id);
+      time.value = movie.timeMovie;
+    }
+    watch(
+      () => props.form,
+      (newVal, prev) => {
+        resetForm();
+        if (!props.isAddItem) {
+          setFieldValue("movieId", newVal.movieId);
+          setFieldValue("roomIds", newVal.roomIds);
+          setFieldValue("price", newVal.price);
+        }
+        setFieldValue("startDate", newVal.startDate);
+        setFieldValue("endDate", newVal.endDate);
+      }
+    );
     watch(
       () => props.movies,
       (newVal) => {
@@ -165,6 +199,8 @@ export default {
       price,
       startDate,
       endDate,
+      time,
+      changeMovie,
       handleSubmit,
       submitForm,
       closeDialog,
